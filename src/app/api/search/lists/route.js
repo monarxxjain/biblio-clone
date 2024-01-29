@@ -1,11 +1,12 @@
 const cheerio = require("cheerio");
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest ,NextResponse } from 'next/server'
 
-export const POST = async (req, res) => {
+export const POST = async (req) => {
     const body = await req.json();
     const scrapeURL = body.queryURL.split("&")[0];
-    console.log(scrapeURL)
-      const response = await fetch(`${scrapeURL}`, {
+
+    try {
+      const response = await fetch(`${scrapeURL}&search_type=lists`, {
         method: "GET",
         headers: new Headers({
           "User-Agent":
@@ -19,45 +20,26 @@ export const POST = async (req, res) => {
       const result = $("table > tbody > tr")
         .map((i, el) => {
           const $el = $(el);
-          const cover = $el.find("tr > td > a > img").attr("src");
-          const title = $el.find("tr > td:nth-child(2) > a > span").text();
-          const bookURL = $el.find("tr > td:nth-child(2) > a").attr("href");
-          const author = $el
-            .find(
-              "tr > td:nth-child(2) > span[itemprop = 'author'] > div > a > span[itemprop = 'name']"
-            )
-            .html();
-          const authorURL = $el
-            .find("tr > td:nth-child(2) > span[itemprop = 'author'] > div > a")
-            .attr("href")
-            .replace("https://www.goodreads.com", "")
-            .split("?")[0];
-          const rating = $el
-            .find(
-              "tr > td:nth-child(2) > div > span.greyText.smallText.uitext > span.minirating"
-            )
-            .text();
-
+          const cover = $el.find("td > div > a > img").attr("src");
+          const title = $el.find("td > a").text();
+          const listURL = $el.find("td > a").attr("href");
+          const rating = $el.find("td > div").text().replaceAll("\n", "");
           const id = i + 1;
           return {
             id: id,
             cover: cover,
             title: title,
-            bookURL: bookURL,
-            author: author,
-            authorURL: authorURL,
+            listURL: listURL,
             rating: rating,
           };
         })
         .toArray();
-
       const lastScraped = new Date().toISOString();
-      
       const respData = {
         status: "Received",
         source: "https://github.com/nesaku/biblioreads",
         scrapeURL: scrapeURL,
-        searchType: "books",
+        searchType: "lists",
         numberOfResults: numberOfResults,
         result: result,
         lastScraped: lastScraped,
@@ -71,6 +53,17 @@ export const POST = async (req, res) => {
           }
         }
       )
-     
+    } catch (error) {
+      console.error("An error has occurred with the scraper.");
+        return NextResponse.json(
+          {
+            status: "Error - Invalid Query",
+            scrapeURL: scrapeURL,
+          },
+          {
+            status: 404
+          }
+        )
+    }
 };
 

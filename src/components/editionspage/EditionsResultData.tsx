@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState } from "react";
 import Meta from "@/components/global/Meta";
 import EditionsList from "./EditionsList";

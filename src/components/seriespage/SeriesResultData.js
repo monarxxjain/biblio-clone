@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+"use client"
 import { useState } from "react";
 import DOMPurify from "dompurify";
 import Meta from "../global/Meta";

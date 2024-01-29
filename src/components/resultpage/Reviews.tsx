@@ -1,3 +1,4 @@
+"use client"
 import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import ReviewCard from "./ReviewCard";

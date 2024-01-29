@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from 'react'
 import { openDB } from 'idb'
 import SmallLoader from '../global/SmallLoader'

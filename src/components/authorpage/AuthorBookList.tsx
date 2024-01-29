@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+"use client"
 import { useState } from "react";
 import Meta from "../global/Meta";
 import BookList from "../listpage/BookList";

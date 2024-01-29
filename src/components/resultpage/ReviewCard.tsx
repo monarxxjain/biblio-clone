@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react";
 import DOMPurify from "dompurify";
 import StarIcon from "./StarIcon";

@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @next/next/no-html-link-for-pages */
+"use client"
 import { useEffect, useRef, useState } from "react";
 import SmallLoader from "../global/SmallLoader";
 

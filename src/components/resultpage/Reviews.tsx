@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import ReviewCard from "./ReviewCard";
 import FilterButton from "./FilterButton";
-import SortButton from "./SortButton.tsxx";
+import SortButton from "./SortButton.tsx";
 
 const Reviews = (props) => {
   const [showReviews, setShowReviews] = useState(false);

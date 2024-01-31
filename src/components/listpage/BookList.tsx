@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import SmallLoader from "../global/SmallLoader";
+import Image from "next/image";
 
 interface BookData {
   bookURL: string;
@@ -88,7 +89,7 @@ const BookList: React.FC<BookListProps> = (props) =>{
                       type="image/jpeg"
                       className="rounded-lg shadow-sm drop-shadow-sm bg-white dark:bg-slate-900"
                     />
-                    <img
+                    <Image
                       src={`/img?url=${data.cover
                         .replace("._SX50_SY75_", "")
                         .replace("._SY75_", "")

@@ -13,14 +13,35 @@ interface Params {
 }
 
 interface ScrapedData {
-  title?: string;
-  error?: boolean;
+  title: string;
+  ratingCount: string;
+  reviewsCount: string;
+  desc: string;
+  bookEdition: string;
+  publishDate: string;
+  isbn: string;
+  lang: string;
+  scrapeURL: string;
+  reviewBreakdown: any;  
+  quotesURL: string;
+  questions:any;
+  cover:any;
+  author:any;
+  rating:any;
+  seriesURL:any;
+  series:any;
+  quotes:any;
+  questionsURL:any;
+  genres:any;
+  reviews:any;
+  statusCode: number;
+
 }
 
 const Slug = ({params}: {params: Params}) => {
   const router = useRouter()
   const slug  = params.slug
-  const [scrapedData, setScrapedData] = useState<ScrapedData>({})
+  const [scrapedData, setScrapedData] = useState<ScrapedData>()
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -37,6 +58,7 @@ const Slug = ({params}: {params: Params}) => {
       if (res.ok) {
         const data = await res.json()
         setScrapedData(data)
+        console.log("ScrapedData ",data)
       } else if (!res.ok) {
         // TODO: come up with a better solution than retrying until a successful response is received
         setTimeout(function () {
@@ -65,14 +87,14 @@ const Slug = ({params}: {params: Params}) => {
         )}
         {!error && (
           <>
-            {scrapedData.title === undefined && <Loader />}
-            {scrapedData.error && (
+            {scrapedData?.title === undefined && <Loader />}
+            {scrapedData?.statusCode === 404 && (
               <ErrorMessage
                 status='404'
                 url={`https://www.goodreads.com/book/show/${slug}`}
               />
             )}
-            {scrapedData.title === '' && (
+            {scrapedData?.title === '' && (
               <ErrorMessage
                 status='ScraperError'
                 url={`https://www.goodreads.com/book/show/${slug}`}

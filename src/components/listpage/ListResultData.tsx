@@ -25,7 +25,7 @@ interface ListResultsProps {
 
 const ListResults: React.FC<ListResultsProps> = ({ scrapedData }) => {
   const [isReadMore, setIsReadMore] = useState(true);
-  console.log("Scraped Data ",scrapedData);
+  // console.log("Scraped Data ",scrapedData);
   const toggleReadMore = () => {
     setIsReadMore(!isReadMore);
   };
@@ -115,7 +115,7 @@ const ListResults: React.FC<ListResultsProps> = ({ scrapedData }) => {
           </div>
         )}
       </div>
-      {scrapedData.books && <BookList books={scrapedData.books} />}
+      {scrapedData.books && <BookList books={scrapedData.books} loading={(scrapedData?.books)?false:true}/>}
     </div>
   );
 };

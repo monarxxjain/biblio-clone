@@ -192,7 +192,7 @@ const Reviews = (props) => {
             {filterStars &&
               sortBy === "popular" &&
               props.data
-                .sort((a, b) => a.id > b.id)
+                .sort((a, b) => b.id-a.id)
                 .map(
                   (data, i) =>
                     data.stars === filterStars && (
@@ -219,7 +219,7 @@ const Reviews = (props) => {
             {filterStars === undefined &&
               sortBy === "popular" &&
               props.data
-                .sort((a, b) => a.id > b.id)
+                .sort((a, b) => b.id-a.id)
                 .map((data, i) => (
                   <div
                     id="sort-popular"

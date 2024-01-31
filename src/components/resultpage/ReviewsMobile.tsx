@@ -189,14 +189,14 @@ const ReviewsMobile: React.FC<ReviewsMobileProps> = (props) => {
                   : "form-control block w-48 m-0 px-3 py-1.5 text-base font-normal text-gray-900 dark:text-gray-200 bg-rose-50 dark:bg-gray-800 bg-clip-padding border-2 border-solid border-gray-400 rounded-lg transition ease-in-out focus:text-gray-900 focus:bg-gray-200 focus:border-rose-600 focus:outline-none"
               }
               onChange={(e) => setSearchText(e.target.value)}
-              disabled={filterStars || sortBy}
+              disabled={Boolean(filterStars) || Boolean(sortBy)}
             />
           </div>
           {/* If popular sort order and star filter is set, order by default and then filter by stars */}
           {filterStars &&
             sortBy === "popular" &&
             props.data
-              .sort((a, b) => a.id > b.id)
+              .sort((a, b) => b.id-a.id)
               .map(
                 (data, i) =>
                   data.stars === filterStars && (
@@ -223,7 +223,7 @@ const ReviewsMobile: React.FC<ReviewsMobileProps> = (props) => {
           {filterStars === undefined &&
             sortBy === "popular" &&
             props.data
-              .sort((a, b) => a.id > b.id)
+              .sort((a, b) => b.id-a.id)
               .map((data, i) => (
                 <div
                   id="sort-popular"

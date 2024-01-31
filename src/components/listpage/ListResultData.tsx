@@ -25,7 +25,7 @@ interface ListResultsProps {
 
 const ListResults: React.FC<ListResultsProps> = ({ scrapedData }) => {
   const [isReadMore, setIsReadMore] = useState(true);
-
+  console.log("Scraped Data ",scrapedData);
   const toggleReadMore = () => {
     setIsReadMore(!isReadMore);
   };

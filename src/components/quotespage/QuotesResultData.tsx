@@ -11,9 +11,21 @@ interface Data {
   url: string;
 }
 
+interface Quote {
+  img?: string;
+  imgURL: string;
+  imgAlt?: string;
+  text: string;
+  author: string;
+  bookURL?: string;
+  book: string;
+  mobile?: boolean;
+  likes?: number;
+}
+
 interface ScrapedData {
   name: string;
-  quotes: string;
+  quotes: Quote[];
   image: string;
   scrapeURL:any;
   popularTags: Data[];
@@ -44,7 +56,7 @@ const QuotesResults: React.FC<QuotesResultsProps> = ({ scrapedData }) => {
       className="flex flex-col p-12 justify-center items-center text-center"
     >
       <Meta title={scrapedData.name} />
-      {scrapedData.quotes != "" && (
+      {scrapedData && (
         <>
           <Link
             href={`/search/${

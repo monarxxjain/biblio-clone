@@ -1,7 +1,10 @@
 "use client"
 import React, { useState } from "react";
+interface ToastProps {
+  message?: string;
+}
 
-const Toast = ({ message = "" }) => {
+const Toast: React.FC<ToastProps> = ({ message = "" }) => {
   const [show, setShow] = useState(true);
 
   const handleClose = () => {

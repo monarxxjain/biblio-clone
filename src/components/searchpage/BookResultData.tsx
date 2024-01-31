@@ -2,7 +2,21 @@
 import Link from 'next/link'
 import Meta from '@/components/global/Meta'
 
-const SearchResults = props => {
+interface SearchResult {
+  bookURL: string;
+  title: string;
+  authorURL: string;
+  author: string;
+  rating: string;
+  cover: string;
+}
+
+interface SearchResultsProps {
+  query: string;
+  result: SearchResult[] | null;
+}
+
+const SearchResults: React.FC<SearchResultsProps> = (props) =>{
   return (
     <div
       id='booksSearchResults'

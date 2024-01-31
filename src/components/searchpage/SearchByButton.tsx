@@ -1,6 +1,12 @@
 import React from "react";
+interface SearchByButtonProps {
+  setQueryType: React.Dispatch<React.SetStateAction<string>>;
+  queryType: string;
+  value: string;
+  text: string;
+}
 
-const SearchByButton = (props) => {
+const SearchByButton: React.FC<SearchByButtonProps> = (props) => {
   return (
     <button
       onClick={() => {

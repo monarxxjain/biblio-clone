@@ -6,7 +6,26 @@ import Meta from "../global/Meta";
 import AuthorBooks from "./AuthorBooks";
 import AuthorSeries from "./AuthorSeries";
 
-const AuthorResultData = ({ scrapedData }) => {
+
+interface Influence {
+  url: string;
+  author: string;
+}
+
+interface ScrapedData {
+  name?: string;
+  image?: string;
+  website?: string;
+  genre?: string;
+  influences?: Influence[];
+  birthDate?: string;
+  deathDate?: string;
+  desc?: string;
+  scrapeURL?: any;
+  books?: any;
+  series?: any;
+}
+const AuthorResultData = ({ scrapedData }: { scrapedData: ScrapedData }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isReadMore, setIsReadMore] = useState(true);
 
@@ -71,7 +90,7 @@ const AuthorResultData = ({ scrapedData }) => {
                       alt=""
                       width="620"
                       height="962"
-                      fetchpriority="high"
+                      fetchPriority="high"
                       loading="eager"
                       onLoad={() => setImageLoaded(true)}
                     />
@@ -121,12 +140,13 @@ const AuthorResultData = ({ scrapedData }) => {
                 </div>
               </div>
             )}
-            {scrapedData.influences != "" && (
+            {scrapedData.influences && scrapedData.influences.length > 0 && (
               <h2 className="font-bold text-2xl mr-2 mt-8 lg:mt-2 underline decoration-rose-600">
                 Influences:
               </h2>
             )}
-            {scrapedData.influences.map((data, i) => (
+            {scrapedData.influences && scrapedData.influences.length > 0 && 
+            scrapedData.influences.map((data, i) => (
               <span key={i} id="authorInfluences" className="">
                 <a
                   className="hover:text-rose-600 underline"
@@ -169,7 +189,7 @@ const AuthorResultData = ({ scrapedData }) => {
                 <h2 className="font-bold text-2xl my-2 capitalize underline decoration-rose-600">
                   Description:{" "}
                 </h2>
-                {scrapedData.desc < 500 ? (
+                {scrapedData.desc.length < 500 ? (
                   <span
                     className={isReadMore ? "hidden" : "block"}
                     dangerouslySetInnerHTML={{

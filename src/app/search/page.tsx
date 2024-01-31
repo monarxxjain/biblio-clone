@@ -4,7 +4,7 @@ import Header from '@/components/global/Header'
 import Footer from '@/components/global/Footer'
 import SearchBox from '@/components/searchpage/SearchBox'
 
-const Search = () => {
+const Search: React.FC = () => {
   return (
     <>
       <div className='bg-gradient-to-tr from-rose-50 to-rose-200 dark:bg-gradientpage min-h-full m-0 p-0'>

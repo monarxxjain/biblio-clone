@@ -3,13 +3,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const FormQuery = () => {
+const FormQuery: React.FC = () => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
   const [validQuery, setValidQuery] = useState(true);
 
   // When the button is clicked/submitted push the input value to the search url
-  const onSubmit = (e) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (inputValue.includes("http" || "www")) {
       if (inputValue.includes("https://www.goodreads.com")) {

@@ -1,15 +1,35 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 
-const AuthorBooks = (props) => {
+
+interface Book {
+  url: string;
+  cover: string;
+  title: string;
+  rating: string;
+}
+
+interface Props {
+  mobile?: boolean;
+  name: string;
+  books: Book[];
+  scrapeURL?: string;
+}
+
+const AuthorBooks = (props: Props) => {
   const slideLeft = () => {
     var slider = document.getElementById(props.mobile ? "desktop" : "slider");
-    slider.scrollLeft = slider.scrollLeft - 500;
+    if (slider) {
+      slider.scrollLeft = slider.scrollLeft - 500;
+    }
   };
 
   const slideRight = () => {
     var slider = document.getElementById(props.mobile ? "desktop" : "slider");
-    slider.scrollLeft = slider.scrollLeft + 500;
+    if (slider) {
+      slider.scrollLeft = slider.scrollLeft + 500;
+    }
+    
   };
 
   return (

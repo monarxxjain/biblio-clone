@@ -5,8 +5,24 @@ import { useEffect, useRef, useState } from "react";
 import SmallLoader from "../global/SmallLoader";
 
 // Instead of waiting for the similar books section to be lazy loaded, get the results directly from the Goodreads similar books page
-const SimilarBooks = ({ quotesURL, mobile }) => {
-  const [scrapedData, setScrapedData] = useState({});
+interface SimilarBooksProps {
+  quotesURL: string;
+  mobile: boolean;
+}
+
+interface BookData {
+  bookURL: string;
+  cover?: string;
+  rating: string;
+  title: string;
+}
+
+interface ScrapedData {
+  books?: BookData[];
+}
+
+const SimilarBooks: React.FC<SimilarBooksProps> = ({ quotesURL, mobile }) => {
+  const [scrapedData, setScrapedData] = useState<ScrapedData>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const initialized = useRef(false);
@@ -45,14 +61,18 @@ const SimilarBooks = ({ quotesURL, mobile }) => {
 
   const slideLeft = () => {
     var slider = document.getElementById(mobile ? "desktop" : "slider");
-    slider.scrollLeft = slider.scrollLeft - 500;
+    if (slider) {
+      slider.scrollLeft = slider.scrollLeft - 500;
+    }
   };
-
+  
   const slideRight = () => {
     var slider = document.getElementById(mobile ? "desktop" : "slider");
-    slider.scrollLeft = slider.scrollLeft + 500;
+    if (slider) {
+      slider.scrollLeft = slider.scrollLeft + 500;
+    }
   };
-
+  
   return (
     <div
       id="bookRelated"

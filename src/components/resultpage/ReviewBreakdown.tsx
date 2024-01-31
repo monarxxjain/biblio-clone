@@ -1,6 +1,19 @@
 import React from "react";
+interface ReviewBreakdownProps {
+  data: {
+    scrapeURL: string;
+    reviewBreakdown: {
+      rating5: any;
+      rating4: any;
+      rating3: any;
+      rating2: any;
+      rating1: any;
+    };
+    ratingCount: any;
+  };
+}
 
-const ReviewBreakdown = ({ data }) => {
+const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
   return (
     <div
       id="reviewBreakdown"

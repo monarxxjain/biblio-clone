@@ -1,6 +1,13 @@
 import React from "react";
 
-const FilterButton = (props) => {
+interface FilterButtonProps {
+  setFilterStars: (value: any) => void;
+  value: any;
+  filterStars: any;
+  text: string;
+}
+
+const FilterButton: React.FC<FilterButtonProps> = (props) =>{
   return (
     <button
       onClick={() => {

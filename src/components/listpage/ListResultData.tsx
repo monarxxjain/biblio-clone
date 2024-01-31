@@ -4,8 +4,26 @@ import { useState } from "react";
 import DOMPurify from "dompurify";
 import Meta from "@/components/global/Meta";
 import BookList from "./BookList";
+interface BookData {
+  bookURL: string;
+  bookNumber: string;
+  title: string;
+  authorURL: string;
+  author: string;
+  rating: string;
+  cover: string;
+}
 
-const ListResults = ({ scrapedData }) => {
+interface ListResultsProps {
+  scrapedData: {
+    title: string;
+    works?: string;
+    desc: string;
+    books: BookData[];
+  };
+}
+
+const ListResults: React.FC<ListResultsProps> = ({ scrapedData }) => {
   const [isReadMore, setIsReadMore] = useState(true);
 
   const toggleReadMore = () => {

@@ -11,8 +11,37 @@ import ReviewBreakdown from "./ReviewBreakdown";
 import Link from "next/link";
 import { openDB } from "idb";
 import Toast from "../global/Toast";
+interface ScrapedData {
+  title: string;
+  ratingCount: string;
+  reviewsCount: string;
+  desc: string;
+  bookEdition: string;
+  publishDate: string;
+  isbn: string;
+  lang: string;
+  scrapeURL: string;
+  reviewBreakdown: any;  
+  quotesURL: string;
+  questions:any;
+  cover:any;
+  author:any;
+  rating:any;
+  seriesURL:any;
+  series:any;
+  quotes:any;
+  questionsURL:any;
+  genres:any;
+  reviews:any;
 
-const ResultData = ({ scrapedData, slug }) => {
+}
+
+interface ResultDataProps {
+  scrapedData: ScrapedData;
+  slug: string;
+}
+
+const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -38,7 +67,7 @@ const ResultData = ({ scrapedData, slug }) => {
   useEffect(() => {
     const savedBookCheck = async () => {
       try {
-        const db = await initializeDB();
+        const db :any= await initializeDB();
         if (router.query.slug) {
           const bookInDB = await db.get("books", router.query.slug[0]);
           setIsSaved(bookInDB !== undefined);
@@ -54,7 +83,7 @@ const ResultData = ({ scrapedData, slug }) => {
   useEffect(() => {
     async function manageBooks() {
       try {
-        const db = await initializeDB();
+        const db:any = await initializeDB();
         const slug = router.query.slug;
 
         if (slug) {
@@ -141,7 +170,7 @@ const ResultData = ({ scrapedData, slug }) => {
             </h1>
             <div className="mt-2 mx-auto max-w-sm xl:max-w-md">
               <span className="font-semibold">By:</span>{" "}
-              {scrapedData.author.map((data, i) => (
+              {scrapedData.author.map((data:any, i:any) => (
                 <span key={i}>
                   <a
                     className="text-md hover:underline hover:text-rose-600"
@@ -235,7 +264,7 @@ const ResultData = ({ scrapedData, slug }) => {
                       alt=""
                       width="620"
                       height="962"
-                      fetchpriority="high"
+                      fetchPriority="high"
                       loading="eager"
                       onLoad={() => setImageLoaded(true)}
                     />

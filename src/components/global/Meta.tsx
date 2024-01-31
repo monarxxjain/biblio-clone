@@ -1,7 +1,13 @@
-import React from "react";
+import React, { FC } from "react";
 import Head from "next/head";
 
-const Meta = (props) => {
+interface MetaProps {
+  title?: string;
+  desc?: string;
+  coverIMG?: string;
+}
+
+const Meta: FC<MetaProps> = (props) =>  {
   const title = `BiblioReads ${props.title ? `- ${props.title}` : ""}  `;
   const description = `${
     props.desc

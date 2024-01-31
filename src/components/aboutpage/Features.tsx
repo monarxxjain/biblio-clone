@@ -1,6 +1,6 @@
 import React from "react";
 
-const Features = () => {
+const Features: React.FC = () => {
   return (
     <div className="text-gray-900 dark:text-white text-center">
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">

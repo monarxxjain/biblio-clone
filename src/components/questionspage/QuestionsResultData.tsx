@@ -4,8 +4,19 @@ import Link from "next/link";
 import { useState } from "react";
 import Meta from "@/components/global/Meta";
 import QuestionCard from "./QuestionCard";
+interface ScrapedData {
+  book?: string;
+  scrapeURL?: string;
+  bookURL?: any;
+  image?: any;
+  questions?: any[];
+}
 
-const QuestionResults = ({ scrapedData }) => {
+interface QuestionResultsProps {
+  scrapedData: ScrapedData;
+}
+
+const QuestionResults: React.FC<QuestionResultsProps> = ({ scrapedData }) => {
   const [imageError, setImageError] = useState(false);
 
   return (

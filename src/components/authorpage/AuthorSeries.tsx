@@ -1,7 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+interface SeriesData {
+  seriesURL: string;
+  title: string;
+  authorURL: string;
+  author: string;
+  rating: string;
+  cover?: string;
+}
 
-const AuthorSeries = (props) => {
+interface AuthorSeriesProps {
+  name: string;
+  series: SeriesData[];
+}
+
+const AuthorSeries = (props: AuthorSeriesProps) => {
   return (
     <div id="authorSeries" className=" dark:text-gray-100/80">
       <h2 className="font-bold text-2xl pt-4 my-2 underline decoration-rose-600 ">
@@ -19,7 +32,7 @@ const AuthorSeries = (props) => {
                   </h3>
                 </Link>
                 <Link href={data.authorURL}>
-                  <p className="text-md hover:underline" href={data.authorURL}>
+                  <p className="text-md hover:underline">
                     {data.author}
                   </p>
                 </Link>

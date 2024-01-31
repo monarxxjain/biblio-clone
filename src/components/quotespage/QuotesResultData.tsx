@@ -6,13 +6,30 @@ import Link from "next/link";
 import Meta from "../global/Meta";
 import QuoteCard from "./QuoteCard";
 
-const QuotesResults = ({ scrapedData }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [validQuery, setValidQuery] = useState(true);
+interface Data {
+  name: string;
+  url: string;
+}
+
+interface ScrapedData {
+  name: string;
+  quotes: string;
+  image: string;
+  scrapeURL:any;
+  popularTags: Data[];
+}
+
+interface QuotesResultsProps {
+  scrapedData: ScrapedData;
+}
+
+const QuotesResults: React.FC<QuotesResultsProps> = ({ scrapedData }) => {
+  const [inputValue, setInputValue] = useState<string>("");
+  const [validQuery, setValidQuery] = useState<boolean>(true);
 
   const router = useRouter();
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.includes("https://")) {
       router.push(`/quotes/tag?utf8=✓&id=${inputValue}`);

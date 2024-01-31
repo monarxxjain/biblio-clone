@@ -1,6 +1,6 @@
 import React from "react";
 
-const ContactHero = () => {
+const ContactHero:React.FC = () => {
   return (
     <div className="mx-auto max-w-screen-xl px-4 pt-20 pb-4 lg:flex lg:mt-20">
       <div className="mx-auto max-w-3xl text-center text-gray-900 dark:text-white ">

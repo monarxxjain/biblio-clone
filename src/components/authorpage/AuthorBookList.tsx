@@ -5,10 +5,21 @@ import Meta from "../global/Meta";
 import BookList from "../listpage/BookList";
 import ErrorMessage from "../global/ErrorMessage";
 
-const ListResults = ({ scrapedData }) => {
-  const [updatedData, setUpdatedData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
+
+interface ScrapedData {
+  previousPage?: string;
+  nextPage?: string;
+  title?: string;
+  works?: string;
+  desc?: string;
+  books?: string;
+  scrapeURL?: string;
+}
+
+const ListResults = ({ scrapedData }: { scrapedData: ScrapedData }) => {
+  const [updatedData, setUpdatedData] =  useState<ScrapedData>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
   const previousPageURL =
     Object.keys(updatedData).length === 0

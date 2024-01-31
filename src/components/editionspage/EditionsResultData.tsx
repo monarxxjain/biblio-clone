@@ -5,13 +5,27 @@ import EditionsList from "./EditionsList";
 import Link from "next/link";
 import SmallLoader from "../global/SmallLoader";
 
-const EditionResults = ({ scrapedData }) => {
-  const [selectedEdition, setSelectedEdition] = useState(null);
-  const [filteredData, setFilteredData] = useState({});
-  const [error, setError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+interface ScrapedData {
+  book: string;
+  authorURL: string;
+  author: string;
+  firstPublished: string;
+  editions: any; 
+  scrapeURL: string;
+}
 
-  const editionChangeHandler = (e) => {
+// Then use it in your component props
+interface EditionResultsProps {
+  scrapedData: ScrapedData;
+}
+
+const EditionResults = ({ scrapedData }: EditionResultsProps) =>{
+  const [selectedEdition, setSelectedEdition] = useState<string | null>(null);
+  const [filteredData, setFilteredData] = useState<any>({});
+  const [error, setError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const editionChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const edition = e.target.value;
     setSelectedEdition(edition);
   };

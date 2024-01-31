@@ -1,8 +1,8 @@
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import { useTheme } from "next-themes";
 
-const ThemeToggle = () => {
+const ThemeToggle: FC = () => {
   const [mounted, setMounted] = useState(false);
   // Detect and use the OS/browser's preferred theme
   const [isDefaultTheme, setIsDefaultTheme] = useState(true);

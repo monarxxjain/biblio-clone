@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
-const AboutHero = () => {
+const AboutHero: React.FC = () => {
   return (
     <div className="mx-auto max-w-screen-xl px-4 pt-32 pb-24 lg:flex lg:mt-20">
       <div className="mx-auto max-w-3xl text-center">

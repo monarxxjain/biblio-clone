@@ -3,9 +3,14 @@ import React, { useEffect, useState } from 'react'
 import { openDB } from 'idb'
 import SmallLoader from '../global/SmallLoader'
 import LibraryList from './LibraryList'
+interface LibraryResultDataProps {
+  currentTab: string;
+}
 
-const LibraryResultData = ({ currentTab }) => {
-  const [savedBooks, setSavedBooks] = useState({})
+
+
+const LibraryResultData: React.FC<LibraryResultDataProps> = ({ currentTab }) => {
+  const [savedBooks, setSavedBooks] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {

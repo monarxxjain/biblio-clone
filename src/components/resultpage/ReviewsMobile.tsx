@@ -3,18 +3,38 @@ import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import ReviewCard from "./ReviewCard";
 import FilterButton from "./FilterButton";
-import SortButton from "./SortButton.tsx";
+import SortButton from "./SortButton";
+interface Review {
+  id: number;
+  image: string;
+  author: string;
+  date: string;
+  stars: number;
+  text: string;
+  likes: number;
+}
 
-const ReviewsMobile = (props) => {
+interface Pagination {
+  data: Review[];
+  offset: number;
+  numberPerPage: number;
+  pageCount: number;
+  currentData: Review[];
+}
+interface ReviewsMobileProps {
+  data: Review[];
+}
+
+const ReviewsMobile: React.FC<ReviewsMobileProps> = (props) => {
   const [showReviews, setShowReviews] = useState(false);
   const [showAvatars, setShowAvatars] = useState(false);
 
-  const [filterStars, setFilterStars] = useState();
-  const [sortBy, setSortBy] = useState();
+  const [filterStars, setFilterStars] = useState<number | undefined>();
+  const [sortBy, setSortBy] = useState<string | undefined>();
 
   const [searchText, setSearchText] = useState("");
 
-  const [pagination, setPagination] = useState({
+  const [pagination, setPagination] = useState<Pagination>({
     data: props.data,
     offset: 0,
     numberPerPage: 6,
@@ -23,7 +43,7 @@ const ReviewsMobile = (props) => {
   });
 
   useEffect(() => {
-    setPagination((prevState) => ({
+    setPagination((prevState:any) => ({
       ...prevState,
       pageCount: prevState.data.length / prevState.numberPerPage,
       currentData: prevState.data.slice(
@@ -33,7 +53,7 @@ const ReviewsMobile = (props) => {
     }));
   }, [pagination.numberPerPage, pagination.offset]);
 
-  const handlePageClick = (event) => {
+  const handlePageClick = (event: { selected: number }) => {
     const selected = event.selected;
     const offset = selected * pagination.numberPerPage;
     setPagination({ ...pagination, offset });

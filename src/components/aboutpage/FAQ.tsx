@@ -1,6 +1,6 @@
 import React from "react";
 
-const FAQ = () => {
+const FAQ: React.FC = () => {
   return (
     <div className="text-gray-900 dark:text-gray-100">
       <h2 className="mt-20 text-3xl text-center font-bold sm:text-4xl">FAQ</h2>

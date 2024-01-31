@@ -2,8 +2,23 @@
 "use client"
 import { useState } from "react";
 import Link from "next/link";
+interface Quote {
+  img?: string;
+  imgURL: string;
+  imgAlt?: string;
+  text: string;
+  author: string;
+  bookURL?: string;
+  book: string;
+  mobile?: boolean;
+  likes?: number;
+}
 
-const QuoteCard = (props) => {
+interface QuoteCardProps {
+  quotes: Quote[];
+}
+
+const QuoteCard: React.FC<QuoteCardProps> = (props) => {
   const [isReadMore, setIsReadMore] = useState(true);
 
   const toggleReadMore = () => {

@@ -1,8 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import Meta from "@/components/global/Meta";
+interface ListResult {
+  listURL: string;
+  title: string;
+  rating: string;
+  cover:any;
+}
 
-const SearchResults = (props) => {
+interface SearchResultsProps {
+  query: string;
+  result: ListResult[] | null;
+}
+
+const SearchResults: React.FC<SearchResultsProps> = (props) => {
   return (
     <div
       id="listsSearchResults"

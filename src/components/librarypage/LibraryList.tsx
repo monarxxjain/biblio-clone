@@ -1,7 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 
-const LibraryList = ({ libraryData }) => {
+
+interface LibraryData {
+  title: string;
+  slug: string;
+  author: AuthorData[];
+  rating: string;
+  timestamp: number;
+  cover?: string;
+}
+interface LibraryListProps {
+  libraryData: LibraryData[];
+}
+interface AuthorData {
+  name: string;
+  url: string;
+}
+
+const LibraryList: React.FC<LibraryListProps> = ({ libraryData }) => {
   return (
     <div
       id="libraryList"
@@ -22,14 +39,13 @@ const LibraryList = ({ libraryData }) => {
                       {data.title}
                     </h3>
                     {data.author &&
-                      data.author.map((data, i) => (
+                      data.author.map((data:AuthorData,i:number) => (
                         <span key={i}>
-                          <p
-                            className="text-md hover:underline hover:text-rose-600"
-                            href={data.url}
-                          >
-                            {(i ? ", " : "") + data.name}
-                          </p>
+                          <Link href={data.url}>
+                            <a className="text-md hover:underline hover:text-rose-600">
+                              {(i ? ", " : "") + data.name}
+                            </a>
+                          </Link>
                         </span>
                       ))}
                     <div className="flex items-center mt-4">

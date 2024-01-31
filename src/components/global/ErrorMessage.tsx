@@ -1,9 +1,14 @@
 "use client"
 /* eslint-disable @next/next/no-html-link-for-pages */
-import React from "react";
+import React, { FC } from "react";
 import { useRouter } from "next/navigation";
 
-const ErrorMessage = (props) => {
+interface ErrorMessageProps {
+  status: "500" | "404" | "ScraperError";
+  url: string;
+}
+
+const ErrorMessage: FC<ErrorMessageProps> = (props) => {
   const router = useRouter();
   return (
     <div className="flex flex-col justify-center max-w-2xl text-center mx-auto h-[74vh]">

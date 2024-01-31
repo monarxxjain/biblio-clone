@@ -1,6 +1,13 @@
 import React from "react";
+interface LibraryTabProps {
+  name: string;
+  setTab: (name: string) => void;
+  currentTab: string;
+  startTab?: boolean;
+  endTab?: boolean;
+}
 
-const LibraryTab = (props) => {
+const LibraryTab: React.FC<LibraryTabProps> = (props) => {
   return (
     <li className="w-18 sm:w-full max-w-xs ">
       <button

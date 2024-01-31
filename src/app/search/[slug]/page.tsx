@@ -11,10 +11,30 @@ import SearchBox from '@/components/searchpage/SearchBox'
 import QuotesResultData from '@/components/searchpage/QuotesResultData'
 import ListsResultData from '@/components/searchpage/ListsResultData'
 
-const Slug = ({params, searchParams}) => {
+
+
+interface Params {
+  slug: string;
+}
+
+interface SearchParams {
+  type: string;
+}
+
+interface ScrapedData {
+  name?: string;
+  status?: string;
+  error?: boolean;
+  numberOfResults?: string;
+  scrapeURL?: string;
+  searchType?: string;
+  result?: any;
+}
+
+const Slug = ({params, searchParams}: {params: Params, searchParams: SearchParams}) => {
   const router = useRouter()
   const slug = params.slug
-  const [scrapedData, setScrapedData] = useState({})
+  const [scrapedData, setScrapedData] = useState<ScrapedData>({})
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -63,12 +83,12 @@ const Slug = ({params, searchParams}) => {
         })
         if (res.ok) {
           const data = await res.json()
-          console.log(data)
+          console.log(data.respData)
           setScrapedData(data.respData)
         } else {
           setError(true)
         }
-      } catch (err) {
+      } catch (err:any) {
         if (err.name === 'AbortError') {
           return
         }

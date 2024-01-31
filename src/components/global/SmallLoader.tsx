@@ -1,6 +1,9 @@
-import React from "react";
+import React, { FC } from "react";
+interface SmallLoaderProps {
+  height: any;
+}
 
-const SmallLoader = ({ height }) => {
+const SmallLoader: FC<SmallLoaderProps> = ({ height }) => {
   return (
     <div
       className={`flex flex-col items-center justify-center h-[${height}vh]`}

@@ -1,6 +1,10 @@
 import React from "react";
 
-const Loader = (props) => {
+interface LoaderProps {
+  other?: boolean;
+}
+
+const Loader: React.FC<LoaderProps> = (props) =>{
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-5 bg-rose-100 dark:bg-gray-900 min-w-screen">
       <div className="flex space-x-2 animate-pulse">

@@ -1,6 +1,13 @@
 import React from "react";
+interface SortButtonProps {
+  value: any;
+  setSortBy: (value: any) => void;
+  setFilterStars: (value: any) => void;
+  sortBy: any;
+  text: string;
+}
 
-const SortButton = (props) => {
+const SortButton: React.FC<SortButtonProps> = (props) => {
   return (
     <button
       onClick={() => {

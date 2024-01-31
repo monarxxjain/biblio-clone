@@ -1,8 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 import { useState } from "react";
+interface QuoteCardProps {
+  questions: {
+    avatar?: string;
+    authorName: string;
+    date: string;
+    mobile?: boolean;
+    spoilerQuestion?: string;
+    question: string;
+    answer: string;
+    shortAnswer: string;
+    likes: boolean;
+  }[];
+}
 
-const QuoteCard = (props) => {
+const QuoteCard: React.FC<QuoteCardProps> = (props) => {
   const [isReadMore, setIsReadMore] = useState(true);
   const [isSpoiler, setShowSpoiler] = useState({});
 

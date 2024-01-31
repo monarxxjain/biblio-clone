@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-const Footer = () => {
+const Footer: React.FC= () => {
   const version = "v2.19.0";
   const versionSlug = "2190---jan-14-2024";
 

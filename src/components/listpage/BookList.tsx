@@ -2,7 +2,22 @@
 import Link from "next/link";
 import SmallLoader from "../global/SmallLoader";
 
-const BookList = (props) => {
+interface BookData {
+  bookURL: string;
+  bookNumber: string;
+  title: string;
+  authorURL: string;
+  author: string;
+  rating: any;
+  cover: string;
+}
+
+interface BookListProps {
+  loading: boolean;
+  books: BookData[];
+}
+
+const BookList: React.FC<BookListProps> = (props) =>{
   return (
     <div id="bookList">
       {props.loading && <SmallLoader height="50" />}

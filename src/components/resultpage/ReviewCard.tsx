@@ -3,7 +3,18 @@ import { useState } from "react";
 import DOMPurify from "dompurify";
 import StarIcon from "./StarIcon";
 
-const ReviewCard = (props) => {
+interface ReviewCardProps {
+  author: string;
+  showAvatars: boolean;
+  image?: string;
+  date: string;
+  stars?: any;
+  text: string;
+  mobile?: boolean;
+  likes?: number;
+}
+
+const ReviewCard: React.FC<ReviewCardProps> = (props) => {
   const [isReadMore, setIsReadMore] = useState(true);
 
   const toggleReadMore = () => {
@@ -11,7 +22,7 @@ const ReviewCard = (props) => {
   };
 
   // Display the appropriate number of stars based on the starVal props
-  function Stars(props) {
+  function Stars(props:any) {
     const starVal = props.starVal;
     if (starVal === "Rating 5 out of 5") {
       return (

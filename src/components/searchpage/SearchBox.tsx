@@ -2,15 +2,19 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SearchByButton from "./SearchByButton";
+interface SearchBoxProps {
+  main?: boolean;
+  searchType?: string;
+}
 
-const SearchBox = (props) => {
+const SearchBox: React.FC<SearchBoxProps> = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [validQuery, setValidQuery] = useState(true);
   const [queryType, setQueryType] = useState("books");
 
   const router = useRouter();
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: React.FormEvent) => {
       e.preventDefault();
       console.log(queryType)
       if (!inputValue.includes("https://")) {

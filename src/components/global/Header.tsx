@@ -6,7 +6,7 @@ import React from "react";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
 
-const Header = () => {
+const Header: React.FC = () => {
   return (
     <header className="p-4 dark:bg-[#881133] text-gray-900 dark:text-gray-100/90 border-b-2 dark:border-b-0 border-rose-300">
       <div className="flex justify-evenly items-center h-16">

@@ -1,7 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+interface EditionData {
+  url: string;
+  title: string;
+  rating: string;
+  publishDate: string;
+  editionInfo: string;
+  ISBN?: string;
+  ASIN?: string;
+  editionLanguage?: string;
+  cover?: string;
+}
 
-const EditionsList = (props) => {
+interface EditionsListProps {
+  editions: EditionData[];
+}
+
+const EditionsList = (props: EditionsListProps) =>{
   return (
     <div id="editionsList">
       {props.editions.map((data, i) => (

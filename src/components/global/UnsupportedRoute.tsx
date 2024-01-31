@@ -1,7 +1,10 @@
 import Link from "next/link";
-import React from "react";
+import React, { FC } from "react";
+interface UnsupportedRouteProps {
+  url: string;
+}
 
-const UnsupportedRoute = (props) => {
+const UnsupportedRoute: FC<UnsupportedRouteProps> = (props) =>{
   return (
     <div className="flex justify-center items-center text-center my-[16vh]">
       <div className="flex flex-col text-gray-800 dark:text-gray-100 bg-white bg-opacity-60 dark:bg-slate-800 dark:bg-opacity-60 py-6 m-4 px-4 sm:px-12 my-[10vh] rounded-2xl max-w-lg items-center">

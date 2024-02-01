@@ -38,3 +38,21 @@ details > summary::-webkit-details-marker {
     opacity: 1;
   }
 }
+
+
+.fade-out {
+  animation: fadeOut 400ms forwards;
+  animation-iteration-count: 1;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    display: none;
+  }
+}
+
+

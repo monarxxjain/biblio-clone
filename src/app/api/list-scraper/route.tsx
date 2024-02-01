@@ -83,7 +83,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
           }
         }
       )
-    } catch (error) {
+    } catch (error) {;
       console.error("An error has occurred with the scraper.");
       return NextResponse.json(
         {

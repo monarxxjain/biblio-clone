@@ -12,16 +12,27 @@ import ListResultData from '@/components/listpage/ListResultData'
 interface Params {
   slug: string;
 }
-
+interface BookData {
+  bookURL: string;
+  bookNumber: string;
+  title: string;
+  authorURL: string;
+  author: string;
+  rating: string;
+  cover: string;
+}
 interface ScrapedData {
-  title?: string;
   error?: boolean;
+  title: string;
+  works?: string;
+  desc: string;
+  books: BookData[];
 }
 
 const Slug = ({params}: {params: Params}) => {
   const router = useRouter()
   const  slug  =params.slug
-  const [scrapedData, setScrapedData]= useState<ScrapedData>({})
+  const [scrapedData, setScrapedData]= useState<ScrapedData>();
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -60,14 +71,14 @@ const Slug = ({params}: {params: Params}) => {
         )}
         {!error && (
           <>
-            {scrapedData.title === undefined && <Loader other={true} />}
-            {scrapedData.error && (
+            {scrapedData?.title === undefined && <Loader other={true} />}
+            {scrapedData?.error && (
               <ErrorMessage
                 status='404'
                 url={`https://www.goodreads.com/list/show/${slug}`}
               />
             )}
-            {scrapedData.title === '' && (
+            {scrapedData?.title === '' && (
               <ErrorMessage
                 status='ScraperError'
                 url={`https://www.goodreads.com/list/show/${slug}`}

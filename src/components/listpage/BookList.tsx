@@ -89,7 +89,7 @@ const BookList: React.FC<BookListProps> = (props) =>{
                       type="image/jpeg"
                       className="rounded-lg shadow-sm drop-shadow-sm bg-white dark:bg-slate-900"
                     />
-                    <Image
+                    <img
                       src={`/img?url=${data.cover
                         .replace("._SX50_SY75_", "")
                         .replace("._SY75_", "")

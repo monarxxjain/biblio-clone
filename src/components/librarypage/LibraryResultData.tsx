@@ -34,7 +34,7 @@ const LibraryResultData: React.FC<LibraryResultDataProps> = ({ currentTab }) => 
     <>
       {isLoading ? (
         <div className='pt-20'>
-          <SmallLoader other={true} />
+          <SmallLoader height="10" />
         </div>
       ) : (
         Object.keys(savedBooks).length === 0 && (

@@ -6,13 +6,24 @@ import BookList from "../listpage/BookList";
 import ErrorMessage from "../global/ErrorMessage";
 
 
+interface BookData {
+  bookURL: string;
+  bookNumber: string;
+  title: string;
+  authorURL: string;
+  author: string;
+  rating: any;
+  cover: string;
+}
+
+
 interface ScrapedData {
   previousPage?: string;
   nextPage?: string;
   title?: string;
   works?: string;
   desc?: string;
-  books?: string;
+  books?: BookData[];
   scrapeURL?: string;
 }
 
@@ -77,7 +88,7 @@ const ListResults = ({ scrapedData }: { scrapedData: ScrapedData }) => {
     <div id="ListResults">
       <Meta title={scrapedData.title} />
       {error ? (
-        <ErrorMessage status="500" url={scrapedData.scrapeURL} />
+        <ErrorMessage status="500" url={(scrapedData.scrapeURL)?scrapedData.scrapeURL:""} />
       ) : (
         <div className="flex flex-col p-12 justify-center items-center text-center dark:text-gray-100/80">
           <h2 className="font-bold text-5xl pt-4 my-2 underline decoration-rose-600 ">
@@ -115,8 +126,8 @@ const ListResults = ({ scrapedData }: { scrapedData: ScrapedData }) => {
           {Object.keys(updatedData).length === 0 && scrapedData.books && (
             <BookList books={scrapedData.books} loading={isLoading} />
           )}
-          {Object.keys(updatedData).length != 0 && (
-            <BookList books={updatedData.books} loading={isLoading} />
+          {Object.keys(updatedData).length != 0 && updatedData.books &&(
+            <BookList books={updatedData.books } loading={isLoading} />
           )}
           {!isLoading && (
             <div id="navigationButtons" className="flex mt-10">

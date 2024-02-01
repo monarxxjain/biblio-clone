@@ -11,16 +11,22 @@ interface Params {
   slug: string;
 }
 
+
+
 interface ScrapedData {
+  book: string;
   error?: boolean;
-  book?: any;
-  editions?: string[];
+  authorURL: string;
+  author: string;
+  firstPublished: string;
+  editions: any; 
+  scrapeURL: string;
 }
 
 const Slug = ({params}: {params: Params}) => {
   const router = useRouter()
   const  slug  = params.slug
-  const [scrapedData, setScrapedData] = useState<ScrapedData>({})
+  const [scrapedData, setScrapedData] = useState<ScrapedData|undefined>()
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -60,15 +66,15 @@ const Slug = ({params}: {params: Params}) => {
         )}
         {!error && (
           <>
-            {scrapedData.book === undefined && <Loader other={true} />}
-            {scrapedData.error && (
+            {scrapedData?.book === undefined && <Loader other={true} />}
+            {scrapedData?.error && (
               <ErrorMessage
                 status='404'
                 url={`https://www.goodreads.com/work/editions/${slug}`}
               />
             )}
 
-            {scrapedData.editions && scrapedData.book.length === 0 && (
+            {scrapedData?.editions && scrapedData.book.length === 0 && (
               <ErrorMessage
                 status='ScraperError'
                 url={`https://www.goodreads.com/work/editions/${slug}`}

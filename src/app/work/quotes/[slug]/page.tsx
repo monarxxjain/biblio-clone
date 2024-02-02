@@ -11,16 +11,37 @@ interface Params {
   slug: string;
 }
 
-interface ScrapedData {
-  error?: boolean;
-  name?: any;
-  quotes?: string[];
+interface Data {
+  name: string;
+  url: string;
 }
+
+interface Quote {
+  img?: string;
+  imgURL: string;
+  imgAlt?: string;
+  text: string;
+  author: string;
+  bookURL?: string;
+  book: string;
+  mobile?: boolean;
+  likes?: number;
+}
+
+interface ScrapedData {
+  name: string;
+  quotes: Quote[];
+  image: string;
+  scrapeURL:any;
+  popularTags: Data[];
+  error?: boolean;
+}
+
 
 const Slug = ({params}: {params: Params}) => {
   const router = useRouter()
   const slug  = params.slug
-  const [scrapedData, setScrapedData] = useState<ScrapedData>({})
+  const [scrapedData, setScrapedData] = useState<ScrapedData|undefined>()
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -60,15 +81,15 @@ const Slug = ({params}: {params: Params}) => {
         )}
         {!error && (
           <>
-            {scrapedData.name === undefined && <Loader other={true} />}
-            {scrapedData.error && (
+            {scrapedData?.name === undefined && <Loader other={true} />}
+            {scrapedData?.error && (
               <ErrorMessage
                 status='404'
                 url={`https://www.goodreads.com/work/quotes/${slug}`}
               />
             )}
 
-            {scrapedData.quotes && scrapedData.name.length === 0 && (
+            {scrapedData?.quotes && scrapedData?.name.length === 0 && (
               <ErrorMessage
                 status='ScraperError'
                 url={`https://www.goodreads.com/work/quotes/${slug}`}

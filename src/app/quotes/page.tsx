@@ -6,13 +6,34 @@ import Loader from "@/components/global/Loader";
 import ErrorMessage from "@/components/global/ErrorMessage";
 import QuotesResultData from "@/components/quotespage/QuotesResultData";
 
+interface Data {
+  name: string;
+  url: string;
+}
+
+interface Quote {
+  img?: string;
+  imgURL: string;
+  imgAlt?: string;
+  text: string;
+  author: string;
+  bookURL?: string;
+  book: string;
+  mobile?: boolean;
+  likes?: number;
+}
+
 interface ScrapedData {
-  name?: string;
+  name: string;
+  quotes: Quote[];
+  image: string;
+  scrapeURL:any;
+  popularTags: Data[];
   error?: boolean;
 }
 
 const Quotes: React.FC  = () => {
-  const [scrapedData, setScrapedData] = useState<ScrapedData>({});
+  const [scrapedData, setScrapedData] = useState<ScrapedData|undefined>();
   const [error, setError] = useState(false);
 
   const fetchData = async () => {
@@ -51,14 +72,14 @@ const Quotes: React.FC  = () => {
         )}
         {!error && (
           <>
-            {scrapedData.name === undefined && <Loader other={true} />}
-            {scrapedData.error && (
+            {scrapedData?.name === undefined && <Loader other={true} />}
+            {scrapedData?.error && (
               <ErrorMessage
                 status="404"
                 url={`https://www.goodreads.com/quotes`}
               />
             )}
-            {scrapedData.name === "" && (
+            {scrapedData?.name === "" && (
               <ErrorMessage
                 status="ScraperError"
                 url={`https://www.goodreads.com/quotes`}

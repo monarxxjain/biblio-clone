@@ -20,21 +20,28 @@ interface Params {
 interface SearchParams {
   type: string;
 }
-
+interface QuoteData {
+  img?: string;
+  text: string;
+  mobile?: boolean;
+  likes?: string;
+}
 interface ScrapedData {
   name?: string;
   status?: string;
   error?: boolean;
-  numberOfResults?: string;
-  scrapeURL?: string;
+  numberOfResults: string;
+  scrapeURL: string;
   searchType?: string;
   result?: any;
+  query:string;
+  quotes: QuoteData[];
 }
 
 const Slug = ({params, searchParams}: {params: Params, searchParams: SearchParams}) => {
   const router = useRouter()
   const slug = params.slug
-  const [scrapedData, setScrapedData] = useState<ScrapedData>({})
+  const [scrapedData, setScrapedData] = useState<ScrapedData|undefined>()
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -119,14 +126,14 @@ const Slug = ({params, searchParams}: {params: Params, searchParams: SearchParam
         )}
         {!error && (
           <>
-            {scrapedData.status === undefined && <Loader other={true} />}
-            {scrapedData.error && (
+            {scrapedData?.status === undefined && <Loader other={true} />}
+            {scrapedData?.error && (
               <ErrorMessage
                 status='404'
                 url={`https://www.goodreads.com/search?utf8=%E2%9C%93&query=${slug}`}
               />
             )}
-            {scrapedData.numberOfResults === '' && (
+            {scrapedData?.numberOfResults === '' && (
               <div className='flex flex-col justify-center items-center align-middle h-[70vh] w-full'>
                 <div className='flex flex-col xl:flex-row justify-center items-center text-center '>
                   <SearchBox />
@@ -174,7 +181,7 @@ const Slug = ({params, searchParams}: {params: Params, searchParams: SearchParam
                   <BookResultData
                     query={scrapedData.scrapeURL}
                     result={scrapedData.result}
-                    numberOfResults={scrapedData.numberOfResults}
+                    // numberOfResults={scrapedData.numberOfResults}
                   />
                 )}
                 {/*  {scrapedData.searchType === "people" && <PeopleResultData />} */}

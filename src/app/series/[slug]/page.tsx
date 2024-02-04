@@ -14,15 +14,19 @@ interface Params {
 }
 
 interface ScrapedData {
-  title?: string;
+  title: string;
   error?: boolean;
+  works: string;
+  desc: string;
+  books: any[];
+  moreBooks?: any;
 }
 
 
 const Slug = ({params}: {params: Params}) => {
   const router = useRouter()
   const slug  = params.slug
-  const [scrapedData, setScrapedData] = useState<ScrapedData>({})
+  const [scrapedData, setScrapedData] = useState<ScrapedData|undefined>()
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -63,14 +67,14 @@ const Slug = ({params}: {params: Params}) => {
         )}
         {!error && (
           <>
-            {scrapedData.title === undefined && <Loader other={true} />}
-            {scrapedData.error && (
+            {scrapedData?.title === undefined && <Loader other={true} />}
+            {scrapedData?.error && (
               <ErrorMessage
                 status='404'
                 url={`https://www.goodreads.com/series/${slug}`}
               />
             )}
-            {scrapedData.title === '' && (
+            {scrapedData?.title === '' && (
               <ErrorMessage
                 status='ScraperError'
                 url={`https://www.goodreads.com/series/${slug}`}

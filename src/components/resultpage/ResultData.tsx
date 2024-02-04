@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ReadMore from "./ReadMore";
 import Reviews from "./Reviews";
 import ReviewsMobile from "./ReviewsMobile";
@@ -47,8 +47,8 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [showToast, setShowToast] = useState("");
-  const router = useRouter();
-
+  const params = useParams();
+  
   async function initializeDB() {
     try {
       return await openDB("library", 1, {
@@ -62,14 +62,13 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
       console.error("Error initializing database:", error);
     }
   }
-  console.log(slug)
 
   useEffect(() => {
     const savedBookCheck = async () => {
       try {
         const db :any= await initializeDB();
-        if (router.query.slug) {
-          const bookInDB = await db.get("books", router.query.slug[0]);
+        if (params.slug) {
+          const bookInDB = await db.get("books", params.slug);
           setIsSaved(bookInDB !== undefined);
         }
       } catch (error) {
@@ -84,12 +83,12 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
     async function manageBooks() {
       try {
         const db:any = await initializeDB();
-        const slug = router.query.slug;
+        const slug = params.slug;
 
         if (slug) {
           if (isSaved && scrapedData) {
             const book = {
-              slug: slug[0],
+              slug: slug,
               timestamp: Date.now(),
               cover: scrapedData.cover,
               title: scrapedData.title,
@@ -97,13 +96,13 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
               rating: scrapedData.rating,
             };
 
-            await db.put("books", book, slug[0]);
+            await db.put("books", book, slug);
             if (isClicked) {
               setShowToast("Book added to library");
               setTimeout(() => setShowToast(""), 3000);
             }
-          } else if (slug.length > 0) {
-            await db.delete("books", slug[0]);
+          } else if (slug) {
+            await db.delete("books", slug);
             if (isClicked) {
               setShowToast("Book removed from library");
               setTimeout(() => setShowToast(""), 3000);

@@ -1,11 +1,11 @@
 const cheerio = require("cheerio");
 import { NextRequest, NextResponse } from 'next/server'
 
-export const POST = async (req:any, res:any) =>  {
+export const POST = async (req:NextRequest, res:NextResponse) =>  {
   const body = await req.json();
   console.log(body)
   const scrapeURL = body.queryURL.split("?")[0];
-      const response = await fetch(`${scrapeURL}`, {
+    try{  const response = await fetch(`${scrapeURL}`, {
         method: "GET",
         headers: new Headers({
           "User-Agent":
@@ -168,12 +168,10 @@ export const POST = async (req:any, res:any) =>  {
         "div.BookDiscussions > div.BookDiscussions__list > a.DiscussionCard:nth-child(3)"
       ).attr("href");
       const lastScraped = new Date().toISOString();
-      {
-        title === "" ? (res.statusCode = 504) : (res.statusCode = 200);
-      }
+      
       const data = {
         status: "Received",
-        statusCode: res.statusCode,
+
         source: "https://github.com/nesaku/biblioreads",
         scrapeURL: scrapeURL,
         cover: cover,
@@ -197,6 +195,26 @@ export const POST = async (req:any, res:any) =>  {
         questions: questions,
         questionsURL: questionsURL,
         lastScraped: lastScraped,
+        }
+        return NextResponse.json(
+          {message: "ok", data},
+          {
+            status: title === "" ? (504) : (200),
+            headers: {
+              'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1800',
+            }
+          }
+        )
+  }catch (error) {
+    console.error("An error has occurred with the scraper.");
+    return NextResponse.json(
+      {
+        status: "Error - Invalid Query",
+        scrapeURL: scrapeURL,
+      },
+      {
+        status: 404
       }
-  return NextResponse.json({message: "ok", data})
+    ) 
+  }
 };

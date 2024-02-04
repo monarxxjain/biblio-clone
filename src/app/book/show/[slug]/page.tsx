@@ -58,7 +58,7 @@ const Slug = ({params}: {params: Params}) => {
       if (res.ok) {
         const data = await res.json()
         setScrapedData(data)
-        console.log("ScrapedData ",data)
+        // console.log("ScrapedData ",data)
       } else if (!res.ok) {
         // TODO: come up with a better solution than retrying until a successful response is received
         setTimeout(function () {

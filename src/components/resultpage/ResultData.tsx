@@ -11,6 +11,7 @@ import ReviewBreakdown from "./ReviewBreakdown";
 import Link from "next/link";
 import { openDB } from "idb";
 import Toast from "../global/Toast";
+import Summary from "./Summary";
 interface ScrapedData {
   title: string;
   ratingCount: string;
@@ -67,7 +68,7 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
     const savedBookCheck = async () => {
       try {
         const db :any= await initializeDB();
-        if (params.slug) {
+        if (params?.slug) {
           const bookInDB = await db.get("books", params.slug);
           setIsSaved(bookInDB !== undefined);
         }
@@ -83,7 +84,7 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
     async function manageBooks() {
       try {
         const db:any = await initializeDB();
-        const slug = params.slug;
+        const slug = params?.slug;
 
         if (slug) {
           if (isSaved && scrapedData) {
@@ -634,6 +635,7 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
           {scrapedData.quotesURL != "" && (
             <SimilarBooks quotesURL={scrapedData.quotesURL} mobile={false} />
           )}
+          <Summary bookId="4345345-345345"/>
           {scrapedData.reviews != "" && <Reviews data={scrapedData.reviews} />}
         </div>
       )}

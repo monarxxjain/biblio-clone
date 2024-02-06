@@ -19,10 +19,10 @@ export default {
                     type: 'object',
                     fields: [
                         {
-                            name: 'label',
-                            title: 'Label',
+                            name: 'language',
+                            title: 'Language',
                             type: 'string',
-                            description: 'Label for the summary'
+                            description: 'Language of the summary'
                         },
                         {
                             name: 'summary',
@@ -44,10 +44,10 @@ export default {
                     type: 'object',
                     fields: [
                         {
-                            name: 'label',
-                            title: 'Label',
+                            name: 'language',
+                            title: 'Language',
                             type: 'string',
-                            description: 'Label for the audio'
+                            description: 'Language of the audio'
                         },
                         {
                             name: 'audio',

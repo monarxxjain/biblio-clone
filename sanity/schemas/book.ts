@@ -1,4 +1,3 @@
-// books.js
 export default {
     name: 'book',
     title: 'Book',
@@ -18,6 +17,7 @@ export default {
                 {
                     type: 'object',
                     fields: [
+                        
                         {
                             name: 'language',
                             title: 'Language',
@@ -43,6 +43,7 @@ export default {
                 {
                     type: 'object',
                     fields: [
+                        
                         {
                             name: 'language',
                             title: 'Language',

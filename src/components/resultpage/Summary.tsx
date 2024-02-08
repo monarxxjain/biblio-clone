@@ -21,26 +21,35 @@ interface BookData {
 }
 
 const Summary: React.FC<ResultDataProps> = ({ bookId }) => {
-  console.log("book id ",bookId);
-  const [bookData, setBookData] = useState<BookData | undefined>();
-  const [curSummary, setCurSummary] = useState<string>("");
-  const curLang = "en";
-  useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        const query = groq`*[_type == "book"]`;
-        const bookData = await client.fetch(query);
-        console.log("book data ", bookData);
-        setBookData(bookData[0]);
-      } catch (error) {
-        console.error("Error fetching book data:", error);
-      }
+    const [bookData, setBookData] = useState<BookData | undefined>();
+    const [curSummary, setCurSummary] = useState<string>("");
+    const curLang = "en";
+    useEffect(() => {
+      console.log("book id ",bookId);
+        const fetchBook = async () => {
+    //   try {
+        // const query = groq`*[_type == 'book' && _id == $bookId][0].summaries[?language == $language]`;
+        
+        const query = groq`*[_type == 'book' && id == $bookId][0]`
+        console.log(query);
+        const bookData = await 
+        client.fetch(query,{bookId,curLang}).then((bookData)=>{
+            console.log("book data ", bookData);
+            setBookData(bookData);
+        }).catch((e)=>
+        {
+            console.error("Error fetching book data:", e);
+        })
+    //   } catch (error) {
+    //   }
     };
-
     fetchBook();
+    console.log("Finished")
   }, [bookId]);
+
   useEffect(()=>{
-    setCurSummary((bookData?.summaries.filter((data)=>data.language==curLang)?.length)?bookData?.summaries.filter((data)=>data.language==curLang)[0].summary:"");
+    // setCurSummary((bookData?.summaries.filter((data)=>data.language==curLang)?.length)?bookData?.summaries.filter((data)=>data.language==curLang)[0].summary:"");
+    setCurSummary((bookData?.summaries.length)?bookData?.summaries[0].summary:"");
   },[bookData])
   return (
     bookData && (
@@ -50,7 +59,9 @@ const Summary: React.FC<ResultDataProps> = ({ bookId }) => {
             Summary:
           </h2>
           <div className="flex space-x-5">
-            {bookData.summaries.filter((data)=>data.language==curLang)
+            {
+            // bookData.summaries.filter((data)=>data.language==curLang)
+            bookData.summaries
             .map((data, i) => (
               <>
                 <button

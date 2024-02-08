@@ -1,6 +1,11 @@
 export const apiVersion =
   process.env.NEXT_PUBLIC_SANITY_API_VERSION || 'v1'
 
+export const token = assertValue(
+  process.env.NEXT_PUBLIC_SANITY_API_TOKEN ,
+  'Missing environment variable: NEXT_PUBLIC_SANITY_API_TOKEN'
+)
+
 export const dataset = assertValue(
   process.env.NEXT_PUBLIC_SANITY_DATASET,
   'Missing environment variable: NEXT_PUBLIC_SANITY_DATASET'

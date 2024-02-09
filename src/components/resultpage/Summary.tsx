@@ -31,9 +31,10 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
       .fetch(query, { bookId, curLang })
       .then((bookData) => {
         console.log("book data ", bookData);
-        setBookData(bookData);
+        setBookData(bookData ? bookData : { summaries: [] });
       })
       .catch((e) => {
+        if (!bookData) setBookData({ summaries: [] });
         console.error("Error fetching book data:", e);
       });
   };
@@ -85,7 +86,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
                   body: JSON.stringify({
                     bookId: bookId,
                     title: title,
-                    lang:curLang,
+                    lang: curLang,
                     author: author,
                   }),
                 });
@@ -110,11 +111,11 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
               Create a new Summary
             </button>
           </div>
-          <div>
-            <ReadMore>{curSummary}</ReadMore>
-
-            {/* </textarea> */}
-          </div>
+          {curSummary && (
+            <div>
+              <ReadMore>{curSummary}</ReadMore>
+            </div>
+          )}
         </div>
       </>
     )

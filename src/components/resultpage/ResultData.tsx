@@ -635,7 +635,7 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
           {scrapedData.quotesURL != "" && (
             <SimilarBooks quotesURL={scrapedData.quotesURL} mobile={false} />
           )}
-          <Summary bookId={slug}/>
+          <Summary bookId={slug} title={scrapedData.title} author={scrapedData.author}/>
           {scrapedData.reviews != "" && <Reviews data={scrapedData.reviews} />}
         </div>
       )}

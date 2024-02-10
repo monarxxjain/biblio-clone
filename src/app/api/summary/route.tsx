@@ -17,7 +17,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       messages: [
         {
           role: "user",
-          content: `Summarize the book "${body.title}" by ${body.author} in ${body.lang} language.`,
+          content: `give me summary of book "${body.title}" by ${body.author} in ${body.lang} language, it should be two part first overall summary and then chapter wise summary.`,
         },
       ],
       model: "gpt-3.5-turbo",

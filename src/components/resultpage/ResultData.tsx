@@ -12,6 +12,15 @@ import Link from "next/link";
 import { openDB } from "idb";
 import Toast from "../global/Toast";
 import Summary from "./Summary";
+
+
+import { onAuthStateChanged } from 'firebase/auth';
+import { getFirestore,getDoc } from 'firebase/firestore';
+import { auth } from "@/app/firebase"
+import { doc, updateDoc, arrayRemove, arrayUnion,setDoc } from "firebase/firestore"; 
+
+const firestore = getFirestore();
+
 interface ScrapedData {
   title: string;
   ratingCount: string;
@@ -63,6 +72,72 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
       console.error("Error initializing database:", error);
     }
   }
+
+ // BOOKMARK WITH FIREBASE
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const uid = user.uid;
+          const userDocRef = doc(firestore, 'library', uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            if (userData.books && userData.books.includes(slug)) {
+              setIsSaved(true);
+            } else {
+              setIsSaved(false);
+            }
+          } else {
+            setIsSaved(false);
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, []);
+
+const handleButtonClick = async () => {
+  const user = auth.currentUser;
+  if (user) {
+    const uid = user.uid;
+    const userDocRef = doc(firestore, 'library', uid);
+
+    try {
+      const docSnap = await getDoc(userDocRef);
+      if (docSnap.exists()) {
+        if (isSaved) {
+          await updateDoc(userDocRef, {
+            books: arrayRemove(slug)
+          });
+        } else {
+          await updateDoc(userDocRef, {
+            books: arrayUnion(slug)
+          });
+        }
+      } 
+      else {
+        await setDoc(userDocRef, {
+          books: [slug]
+       });
+      }
+      setIsSaved(!isSaved);
+      setIsClicked(true);
+    } 
+    
+    catch (error) {
+      console.error('Error updating document:', error);
+    }
+  }
+};
+
+//
+
 
   useEffect(() => {
     const savedBookCheck = async () => {
@@ -191,8 +266,9 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
                   >
                     <button
                       onClick={() => {
-                        !isSaved ? setIsSaved(true) : setIsSaved(false);
-                        setIsClicked(true);
+                        handleButtonClick();
+                        // !isSaved ? setIsSaved(true) : setIsSaved(false);
+                        // setIsClicked(true);
                       }}
                       className="w-14 z-10 h-24 flex items-center justify-center bg-[#881133] text-2xl rounded-b-md shadow-lg border-2 border-slate-800/60"
                     >
@@ -226,8 +302,9 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
                 >
                   <button
                     onClick={() => {
-                      !isSaved ? setIsSaved(true) : setIsSaved(false);
-                      setIsClicked(true);
+                      handleButtonClick ();
+                      // !isSaved ? setIsSaved(true) : setIsSaved(false);
+                      // setIsClicked(true);
                     }}
                     className="w-14 z-10 h-24 flex items-center justify-center bg-[#881133] text-2xl rounded-b-md shadow-lg border-2 border-slate-800/60"
                   >

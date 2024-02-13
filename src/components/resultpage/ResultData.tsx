@@ -16,8 +16,8 @@ import Summary from "./Summary";
 
 import { onAuthStateChanged } from 'firebase/auth';
 import { getFirestore,getDoc } from 'firebase/firestore';
-import { auth } from "@/app/firebase"
 import { doc, updateDoc, arrayRemove, arrayUnion,setDoc } from "firebase/firestore"; 
+import { auth } from "@/lib/firebase";
 
 const firestore = getFirestore();
 
@@ -55,23 +55,22 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
   const [showToast, setShowToast] = useState("");
   const params = useParams();
   
-  async function initializeDB() {
-    try {
-      return await openDB("library", 1, {
-        upgrade(db) {
-          if (!db.objectStoreNames.contains("books")) {
-            db.createObjectStore("books");
-          }
-        },
-      });
-    } catch (error) {
-      console.error("Error initializing database:", error);
-    }
-  }
+  // async function initializeDB() {
+  //   try {
+  //     return await openDB("library", 1, {
+  //       upgrade(db) {
+  //         if (!db.objectStoreNames.contains("books")) {
+  //           db.createObjectStore("books");
+  //         }
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.error("Error initializing database:", error);
+  //   }
+  // }
 
  // BOOKMARK WITH FIREBASE
  useEffect(() => {
@@ -109,16 +108,22 @@ const handleButtonClick = async () => {
     const userDocRef = doc(firestore, 'library', uid);
 
     try {
+      console.log("test ",userDocRef);
       const docSnap = await getDoc(userDocRef);
       if (docSnap.exists()) {
         if (isSaved) {
           await updateDoc(userDocRef, {
             books: arrayRemove(slug)
           });
+          setShowToast("Book removed from library");
+          setTimeout(() => setShowToast(""), 3000);
         } else {
+          
           await updateDoc(userDocRef, {
             books: arrayUnion(slug)
           });
+          setShowToast("Book added to library");
+          setTimeout(() => setShowToast(""), 3000);
         }
       } 
       else {
@@ -127,7 +132,6 @@ const handleButtonClick = async () => {
        });
       }
       setIsSaved(!isSaved);
-      setIsClicked(true);
     } 
     
     catch (error) {
@@ -139,65 +143,65 @@ const handleButtonClick = async () => {
 //
 
 
-  useEffect(() => {
-    const savedBookCheck = async () => {
-      try {
-        const db :any= await initializeDB();
-        if (params?.slug) {
-          const bookInDB = await db.get("books", params.slug);
-          setIsSaved(bookInDB !== undefined);
-        }
-      } catch (error) {
-        console.error("Error checking saved book:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const savedBookCheck = async () => {
+  //     try {
+  //       // const db :any= await initializeDB();
+  //       if (params?.slug) {
+  //         const bookInDB = await db.get("books", params.slug);
+  //         setIsSaved(bookInDB !== undefined);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error checking saved book:", error);
+  //     }
+  //   };
 
-    savedBookCheck();
-  }, [slug]);
+  //   savedBookCheck();
+  // }, [slug]);
 
-  useEffect(() => {
-    async function manageBooks() {
-      try {
-        const db:any = await initializeDB();
-        const slug = params?.slug;
+  // useEffect(() => {
+  //   async function manageBooks() {
+  //     try {
+  //       const db:any = await initializeDB();
+  //       const slug = params?.slug;
 
-        if (slug) {
-          if (isSaved && scrapedData) {
-            const book = {
-              slug: slug,
-              timestamp: Date.now(),
-              cover: scrapedData.cover,
-              title: scrapedData.title,
-              author: scrapedData.author,
-              rating: scrapedData.rating,
-            };
+  //       if (slug) {
+  //         if (isSaved && scrapedData) {
+  //           const book = {
+  //             slug: slug,
+  //             timestamp: Date.now(),
+  //             cover: scrapedData.cover,
+  //             title: scrapedData.title,
+  //             author: scrapedData.author,
+  //             rating: scrapedData.rating,
+  //           };
 
-            await db.put("books", book, slug);
-            if (isClicked) {
-              setShowToast("Book added to library");
-              setTimeout(() => setShowToast(""), 3000);
-            }
-          } else if (slug) {
-            await db.delete("books", slug);
-            if (isClicked) {
-              setShowToast("Book removed from library");
-              setTimeout(() => setShowToast(""), 3000);
-            }
-          }
+  //           await db.put("books", book, slug);
+  //           if (isClicked) {
+  //             setShowToast("Book added to library");
+  //             setTimeout(() => setShowToast(""), 3000);
+  //           }
+  //         } else if (slug) {
+  //           await db.delete("books", slug);
+  //           if (isClicked) {
+  //             setShowToast("Book removed from library");
+  //             setTimeout(() => setShowToast(""), 3000);
+  //           }
+  //         }
 
-          /* 
-          // List all books in DB
-          const allBooks = await db.getAll("books");
-           console.log(allBooks);
-           */
-        }
-      } catch (error) {
-        console.error("Error managing books:", error);
-      }
-    }
+  //         /* 
+  //         // List all books in DB
+  //         const allBooks = await db.getAll("books");
+  //          console.log(allBooks);
+  //          */
+  //       }
+  //     } catch (error) {
+  //       console.error("Error managing books:", error);
+  //     }
+  //   }
 
-    manageBooks();
-  }, [isSaved, scrapedData]);
+  //   manageBooks();
+  // }, [isSaved, scrapedData]);
 
   const externalSVG = (
     <svg
@@ -266,12 +270,18 @@ const handleButtonClick = async () => {
                   >
                     <button
                       onClick={() => {
+                        console.log("Button clicked")
                         handleButtonClick();
                         // !isSaved ? setIsSaved(true) : setIsSaved(false);
                         // setIsClicked(true);
                       }}
                       className="w-14 z-10 h-24 flex items-center justify-center bg-[#881133] text-2xl rounded-b-md shadow-lg border-2 border-slate-800/60"
                     >
+                      <div>
+
+
+                      aasdf
+                      </div>
                       <svg
                         viewBox="0 0 257 445"
                         className={`w-[50%]  ${
@@ -302,6 +312,7 @@ const handleButtonClick = async () => {
                 >
                   <button
                     onClick={() => {
+
                       handleButtonClick ();
                       // !isSaved ? setIsSaved(true) : setIsSaved(false);
                       // setIsClicked(true);

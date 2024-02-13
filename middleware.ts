@@ -4,7 +4,6 @@ import { NextRequest } from 'next/server';
 
 export default function middleware(req:NextRequest)
 {
-    console.log("This is middleware ",req);
     const handle = createMiddleware({
     locales,
     defaultLocale: 'en',

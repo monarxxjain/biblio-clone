@@ -7,6 +7,8 @@ import SortButton from "./SortButton";
 import { client } from "../../../sanity/lib/client";
 import { groq } from "next-sanity";
 import ReadMore from "./ReadMore";
+import { useLocale } from "next-intl";
+import Toast from "../global/Toast";
 
 interface ResultDataProps {
   bookId: string;
@@ -23,14 +25,15 @@ interface BookData {
 const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
   const [bookData, setBookData] = useState<BookData | undefined>();
   const [curSummary, setCurSummary] = useState<string>("");
-  const curLang = "en";
+  const [showToast,setShowToast] = useState<string>("")
+  const curLang = useLocale();
   const fetchBook = async () => {
     const query = groq`*[_type == 'book' && id == $bookId][0]`;
-    console.log(query);
+    // console.log(query);
     client
       .fetch(query, { bookId, curLang })
       .then((bookData) => {
-        console.log("book data ", bookData);
+        // console.log("book data ", bookData);
         setBookData(bookData ? bookData : { summaries: [] });
       })
       .catch((e) => {
@@ -51,9 +54,14 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
       bookData?.summaries.length ? bookData?.summaries[0].summary : ""
     );
   }, [bookData]);
+
+  const [createSummaryBtn,setCurSummaryBtn] = useState<String>("Create a new Summary")
   return (
     bookData && (
       <>
+        <div id="libraryToast">
+                {showToast && <Toast message={showToast} />}
+        </div>
         <div id="bookSummary" className="dark:text-gray-100/80">
           <h2 className="font-bold text-2xl mt-0 mb-4 underline decoration-rose-600">
             Summary:
@@ -90,9 +98,14 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
                     author: author,
                   }),
                 });
+                setCurSummaryBtn("Creating...")
+                
                 const data = await res.json();
+                setCurSummaryBtn("Create a new Summary")
                 // console.log("Chat Gpt Data ", data);
                 if (res.ok) {
+                  setShowToast("Summary created successfuly.");
+                  setTimeout(() => setShowToast(""), 3000);
                   setBookData({
                     ...bookData,
                     summaries: [
@@ -101,6 +114,8 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
                     ],
                   });
                 } else if (!res.ok) {
+                  setShowToast("Summary creation failed.");
+                  setTimeout(() => setShowToast(""), 3000);
                   console.log("Some thing went wrong while generating summary");
                 } else {
                   // setError(true)
@@ -108,7 +123,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
               }}
               className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
             >
-              Create a new Summary
+              {createSummaryBtn}
             </button>
           </div>
           {curSummary && (

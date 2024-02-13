@@ -25,7 +25,6 @@ export default function RootLayout({
   params: { locale }
 }: Props) {
   const messages = useMessages();
-  console.log("Logging from root - 1")
   return (
     <html lang={locale}>
       <body className={inter.className}>

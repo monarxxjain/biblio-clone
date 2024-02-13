@@ -2,7 +2,7 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google';
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '@/app/firebase'
+import { auth } from '@/lib/firebase'
 
 export const authOptions = {
   // Configure one or more authentication providers

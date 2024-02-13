@@ -7,12 +7,13 @@ import Link from 'next/link'
 import { signIn, useSession } from 'next-auth/react'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
+import { useLocale } from 'sanity'
 
 const SignUpPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
-
+  const lang = useLocale();
   const signup = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(userCredential => {
@@ -22,7 +23,7 @@ const SignUpPage = () => {
             email,
             password,
             redirect: true,
-            callbackUrl: '/'
+            callbackUrl: '/'+lang
           })
         // router.push('/')
       })

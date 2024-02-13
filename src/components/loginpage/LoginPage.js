@@ -1,6 +1,7 @@
 'use client'
 
 import { signIn, useSession } from 'next-auth/react'
+import { useLocale } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -10,6 +11,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('')
   const router = useRouter()
   const session =useSession();
+  const lang = useLocale();
   if(session.status ==="authenticated")
   {
     router.push('/')
@@ -80,7 +82,7 @@ const LoginPage = () => {
                   email,
                   password,
                   redirect: true,
-                  callbackUrl: '/'
+                  callbackUrl: '/'+lang
                 })
               }
               disabled={!email || !password}

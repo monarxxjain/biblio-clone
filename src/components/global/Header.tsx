@@ -5,20 +5,22 @@
 import React from "react";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
+import { useLocale } from "next-intl";
 
 const Header: React.FC = () => {
+  const lang = useLocale();
   return (
     <header className="p-4 dark:bg-[#881133] text-gray-900 dark:text-gray-100/90 border-b-2 dark:border-b-0 border-rose-300">
       <div className="flex justify-evenly items-center h-16">
         <div className="flex">
-          <a href="/" aria-label="Back to homepage">
+          <a href={"/"+lang+"/"} aria-label="Back to homepage">
             <img src="/logo.svg" alt="" width="64" height="64" />
           </a>
         </div>
         <div>
           <ul className="items-stretch hidden space-x-3 lg:flex">
             <li className="flex">
-              <Link href="/quotes">
+              <Link href={"/"+lang+"/quotes"}>
                 <p
                   className="flex items-center px-4 -mb-1 border-b-2 border-rose-400 hover:border-rose-600 dark:hover:border-white/90 transition duration-300 delay-150 hover:delay-50 dark:border-gray-300/90 hover:text-rose-900 dark:hover:text-white/90"
                   aria-hidden="true"
@@ -28,14 +30,14 @@ const Header: React.FC = () => {
               </Link>
             </li>
             <li className="flex">
-              <Link href="/library">
+              <Link href={"/"+lang+"/library"}>
                 <p className="flex items-center px-4 -mb-1 border-b-2 border-rose-400 hover:border-rose-600 dark:hover:border-white/90 transition duration-300 delay-150 hover:delay-50 dark:border-gray-300/90 hover:text-rose-900 dark:hover:text-white/90">
                   Library
                 </p>
               </Link>
             </li>
             <li className="flex">
-              <Link href="/about">
+              <Link href={"/"+lang+"/about"}>
                 <p className="flex items-center px-4 -mb-1 border-b-2 border-rose-400 hover:border-rose-600 dark:hover:border-white/90 transition duration-300 delay-150 hover:delay-50 dark:border-gray-300/90 hover:text-rose-900 dark:hover:text-white/90">
                   About
                 </p>
@@ -43,7 +45,7 @@ const Header: React.FC = () => {
             </li>
 
             <li className="flex">
-              <Link href="/privacy">
+              <Link href={"/"+lang+"/privacy"}>
                 <p className="flex items-center px-4 -mb-1 border-b-2 border-rose-400 hover:border-rose-600 dark:hover:border-white/90 transition duration-300 delay-150 hover:delay-50 dark:border-gray-300/90 hover:text-rose-900 dark:hover:text-white/90">
                   Privacy
                 </p>
@@ -88,7 +90,7 @@ const Header: React.FC = () => {
         </div>
         <ul className="flex">
           <li className="flex items-center justify-center align-middle content-center mr-4">
-            <Link href="/search">
+            <Link href={"/"+lang+"/search"}>
               <p
                 className="mt-0.5 text-gray-900 hover:text-rose-900 dark:text-gray-100/80 dark:hover:text-white/90 duration-300 delay-150 hover:delay-50 transition"
                 aria-label="Search"

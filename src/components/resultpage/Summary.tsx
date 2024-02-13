@@ -55,7 +55,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
     );
   }, [bookData]);
 
-  const [createSummaryBtn,setCurSummaryBtn] = useState<String>("Create a new Summary")
+  const [createSummaryBtn,setCreateSummaryBtn] = useState<String>("Create a new Summary")
   return (
     bookData && (
       <>
@@ -86,6 +86,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
             <button
               type="button"
               onClick={async () => {
+                setCreateSummaryBtn("Creating...")
                 const res = await fetch(`/api/summary`, {
                   method: "POST",
                   headers: {
@@ -98,10 +99,8 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
                     author: author,
                   }),
                 });
-                setCurSummaryBtn("Creating...")
                 
                 const data = await res.json();
-                setCurSummaryBtn("Create a new Summary")
                 // console.log("Chat Gpt Data ", data);
                 if (res.ok) {
                   setShowToast("Summary created successfuly.");
@@ -120,10 +119,11 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
                 } else {
                   // setError(true)
                 }
+                setCreateSummaryBtn("Create a new Summary")
               }}
               className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
             >
-              {createSummaryBtn}
+              {createSummaryBtn+"sdfds  "}
             </button>
           </div>
           {curSummary && (

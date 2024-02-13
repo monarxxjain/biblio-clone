@@ -7,11 +7,11 @@ import SortButton from "./SortButton";
 import { client } from "../../../sanity/lib/client";
 import { groq } from "next-sanity";
 import ReadMore from "./ReadMore";
-// import { useClient } from "sanity";
-// import {client } from "@/snaity"
 
 interface ResultDataProps {
   bookId: string;
+  title: string;
+  author: string;
 }
 interface BookData {
   summaries: {
@@ -20,28 +20,37 @@ interface BookData {
   }[];
 }
 
-const Summary: React.FC<ResultDataProps> = ({ bookId }) => {
-  console.log("book id ",bookId);
+const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
   const [bookData, setBookData] = useState<BookData | undefined>();
   const [curSummary, setCurSummary] = useState<string>("");
   const curLang = "en";
-  useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        const query = groq`*[_type == "book"]`;
-        const bookData = await client.fetch(query);
+  const fetchBook = async () => {
+    const query = groq`*[_type == 'book' && id == $bookId][0]`;
+    console.log(query);
+    client
+      .fetch(query, { bookId, curLang })
+      .then((bookData) => {
         console.log("book data ", bookData);
-        setBookData(bookData[0]);
-      } catch (error) {
-        console.error("Error fetching book data:", error);
-      }
-    };
+        setBookData(bookData ? bookData : { summaries: [] });
+      })
+      .catch((e) => {
+        if (!bookData) setBookData({ summaries: [] });
+        console.error("Error fetching book data:", e);
+      });
+  };
 
+  useEffect(() => {
+    console.log("book id ", bookId);
     fetchBook();
+    console.log("Finished");
   }, [bookId]);
-  useEffect(()=>{
-    setCurSummary((bookData?.summaries.filter((data)=>data.language==curLang)?.length)?bookData?.summaries.filter((data)=>data.language==curLang)[0].summary:"");
-  },[bookData])
+
+  useEffect(() => {
+    // setCurSummary((bookData?.summaries.filter((data)=>data.language==curLang)?.length)?bookData?.summaries.filter((data)=>data.language==curLang)[0].summary:"");
+    setCurSummary(
+      bookData?.summaries.length ? bookData?.summaries[0].summary : ""
+    );
+  }, [bookData]);
   return (
     bookData && (
       <>
@@ -50,35 +59,63 @@ const Summary: React.FC<ResultDataProps> = ({ bookId }) => {
             Summary:
           </h2>
           <div className="flex space-x-5">
-            {bookData.summaries.filter((data)=>data.language==curLang)
-            .map((data, i) => (
-              <>
-                <button
-                  type="button"
-                  onClick={() => {setCurSummary(data.summary)}}
-                  className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
-                >
-                  Version {i+1}
-                </button>
-              </>
-            ))}
+            {
+              // bookData.summaries.filter((data)=>data.language==curLang)
+              bookData.summaries.map((data, i) => (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCurSummary(data.summary);
+                    }}
+                    className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
+                  >
+                    Version {i + 1}
+                  </button>
+                </>
+              ))
+            }
             <button
               type="button"
-              onClick={() => {}}
+              onClick={async () => {
+                const res = await fetch(`/api/summary`, {
+                  method: "POST",
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    bookId: bookId,
+                    title: title,
+                    lang: curLang,
+                    author: author,
+                  }),
+                });
+                const data = await res.json();
+                // console.log("Chat Gpt Data ", data);
+                if (res.ok) {
+                  setBookData({
+                    ...bookData,
+                    summaries: [
+                      ...bookData.summaries,
+                      { language: curLang, summary: data.respData.summary },
+                    ],
+                  });
+                } else if (!res.ok) {
+                  console.log("Some thing went wrong while generating summary");
+                } else {
+                  // setError(true)
+                }
+              }}
               className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
             >
               Create a new Summary
             </button>
           </div>
-          <div>
-
-            <ReadMore>
-
-            {curSummary}
-            </ReadMore>
-
-            {/* </textarea> */}
-          </div>
+          {curSummary && (
+            <div>
+              <ReadMore>{curSummary}</ReadMore>
+            </div>
+          )}
         </div>
       </>
     )

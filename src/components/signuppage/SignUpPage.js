@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { signIn, useSession } from 'next-auth/react'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
-import { useLocale } from 'sanity'
+import { useLocale } from 'next-intl'
 import { auth } from '@/lib/firebase'
 
 const SignUpPage = () => {

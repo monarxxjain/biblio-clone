@@ -2,12 +2,12 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { auth } from '@/app/firebase'
 import Link from 'next/link'
 import { signIn, useSession } from 'next-auth/react'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import { useLocale } from 'sanity'
+import { auth } from '@/lib/firebase'
 
 const SignUpPage = () => {
   const [email, setEmail] = useState('')

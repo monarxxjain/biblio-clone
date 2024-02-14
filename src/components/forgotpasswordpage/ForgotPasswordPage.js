@@ -3,7 +3,7 @@ import { sendPasswordResetEmail } from 'firebase/auth';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
-import { auth } from '@/app/firebase';
+import { auth } from '@/lib/firebase';
 
 const ForgotPasswordPage = () =>{
     const [email, setEmail] = useState('');

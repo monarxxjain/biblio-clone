@@ -5,16 +5,28 @@ import ReviewCard from "./ReviewCard";
 import FilterButton from "./FilterButton";
 import SortButton from "./SortButton";
 
-const Reviews = (props) => {
-  const [showReviews, setShowReviews] = useState(false);
-  const [showAvatars, setShowAvatars] = useState(false);
+interface Props {
+  data: any[];
+}
+
+interface Pagination {
+  data: any[];
+  offset: number;
+  numberPerPage: number;
+  pageCount: number;
+  currentData: any[];
+}
+
+const Reviews = (props: Props) => {
+  const [showReviews, setShowReviews] = useState<boolean>(false);
+  const [showAvatars, setShowAvatars] = useState<boolean>(false);
 
   const [filterStars, setFilterStars] = useState();
   const [sortBy, setSortBy] = useState();
 
   const [searchText, setSearchText] = useState("");
 
-  const [pagination, setPagination] = useState({
+  const [pagination, setPagination] = useState<Pagination>({
     data: props.data,
     offset: 0,
     numberPerPage: 6,
@@ -33,7 +45,7 @@ const Reviews = (props) => {
     }));
   }, [pagination.numberPerPage, pagination.offset]);
 
-  const handlePageClick = (event) => {
+  const handlePageClick = (event:any) => {
     const selected = event.selected;
     const offset = selected * pagination.numberPerPage;
     setPagination({ ...pagination, offset });
@@ -192,7 +204,7 @@ const Reviews = (props) => {
             {filterStars &&
               sortBy === "popular" &&
               props.data
-                .sort((a, b) => b.id-a.id)
+                .sort((a, b) => b.id - a.id)
                 .map(
                   (data, i) =>
                     data.stars === filterStars && (
@@ -219,7 +231,7 @@ const Reviews = (props) => {
             {filterStars === undefined &&
               sortBy === "popular" &&
               props.data
-                .sort((a, b) => b.id-a.id)
+                .sort((a, b) => b.id - a.id)
                 .map((data, i) => (
                   <div
                     id="sort-popular"

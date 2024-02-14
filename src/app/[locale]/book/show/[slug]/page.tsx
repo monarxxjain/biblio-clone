@@ -10,6 +10,7 @@ import ResultData from '@/components/resultpage/ResultData'
 
 interface Params {
   slug: string;
+  locale: string;
 }
 
 interface ScrapedData {
@@ -40,7 +41,7 @@ interface ScrapedData {
 
 const Slug = ({params}: {params: Params}) => {
   const router = useRouter()
-  const slug  = params.slug
+  const slug  = params.slug;
   const [scrapedData, setScrapedData] = useState<ScrapedData>()
   const [error, setError] = useState(false)
 
@@ -100,7 +101,7 @@ const Slug = ({params}: {params: Params}) => {
                 url={`https://www.goodreads.com/book/show/${slug}`}
               />
             )}
-            {scrapedData && <ResultData scrapedData={scrapedData} slug={slug} />}
+            {scrapedData && <ResultData scrapedData={scrapedData} slug={slug} language={params.locale} />}
           </>
         )}
         <Footer />

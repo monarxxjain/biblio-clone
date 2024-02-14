@@ -14,6 +14,7 @@ interface ResultDataProps {
   bookId: string;
   title: string;
   author: string;
+  curLang: string;
 }
 interface BookData {
   summaries: {
@@ -22,19 +23,25 @@ interface BookData {
   }[];
 }
 
-const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
-  const [bookData, setBookData] = useState<BookData | undefined>();
+const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) => {
+  const [bookData, setBookData] = useState<BookData>({summaries:[]});
   const [curSummary, setCurSummary] = useState<string>("");
   const [showToast,setShowToast] = useState<string>("")
-  const curLang = useLocale();
+  
   const fetchBook = async () => {
-    const query = groq`*[_type == 'book' && id == $bookId][0]`;
-    // console.log(query);
+    // const query = groq`*[_type == 'book' && id == $bookId][0]`;
+    const query = groq`*[_type == 'book' && id == $bookId] {
+      summaries[][language == $curLang]
+    }`;
+    console.log(curLang);
     client
       .fetch(query, { bookId, curLang })
-      .then((bookData) => {
-        // console.log("book data ", bookData);
-        setBookData(bookData ? bookData : { summaries: [] });
+      .then((res) => {
+        console.log("book data ", res[0].summaries);
+        let temp : BookData|undefined = bookData;
+        if(res[0])temp.summaries = (res[0].summaries ? res[0].summaries : [] )
+        console.log("book res ", temp);
+        setBookData(temp);
       })
       .catch((e) => {
         if (!bookData) setBookData({ summaries: [] });
@@ -43,13 +50,12 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
   };
 
   useEffect(() => {
-    console.log("book id ", bookId);
     fetchBook();
-    console.log("Finished");
   }, [bookId]);
 
   useEffect(() => {
     // setCurSummary((bookData?.summaries.filter((data)=>data.language==curLang)?.length)?bookData?.summaries.filter((data)=>data.language==curLang)[0].summary:"");
+    console.log(" update summaries ",bookData.summaries)
     setCurSummary(
       bookData?.summaries.length ? bookData?.summaries[0].summary : ""
     );
@@ -57,19 +63,20 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
 
   const [createSummaryBtn,setCreateSummaryBtn] = useState<String>("Create a new Summary")
   return (
-    bookData && (
+     (
       <>
         <div id="libraryToast">
                 {showToast && <Toast message={showToast} />}
         </div>
         <div id="bookSummary" className="dark:text-gray-100/80">
+          <button onClick={()=>fetchBook()}>Test</button>
           <h2 className="font-bold text-2xl mt-0 mb-4 underline decoration-rose-600">
             Summary:
           </h2>
           <div className="flex space-x-5">
             {
               // bookData.summaries.filter((data)=>data.language==curLang)
-              bookData.summaries.map((data, i) => (
+              bookData?.summaries?.map((data, i) => (
                 <>
                   <button
                     type="button"
@@ -123,7 +130,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author }) => {
               }}
               className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
             >
-              {createSummaryBtn+"sdfds  "}
+              {createSummaryBtn}
             </button>
           </div>
           {curSummary && (

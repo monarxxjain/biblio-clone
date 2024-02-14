@@ -1,9 +1,10 @@
 export const apiVersion =
-  process.env.NEXT_PUBLIC_SANITY_API_VERSION || 'v1'
+process.env.NEXT_PUBLIC_SANITY_API_VERSION || 'v1'
 
+console.log(process.env.NEXT_PUBLIC_SANITY_API_TOKEN, "testing")
 export const token = assertValue(
   process.env.NEXT_PUBLIC_SANITY_API_TOKEN ,
-  'Missing environment variable: NEXT_PUBLIC_SANITY_API_TOKEN'
+  'Missing environment variable: SANITY_API_TOKEN'
 )
 
 export const dataset = assertValue(
@@ -16,12 +17,11 @@ export const projectId = assertValue(
   'Missing environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID'
 )
 
-export const useCdn = false
 
+export const useCdn = false
 function assertValue<T>(v: T | undefined, errorMessage: string): T {
   if (v === undefined) {
     throw new Error(errorMessage)
   }
-
   return v
 }

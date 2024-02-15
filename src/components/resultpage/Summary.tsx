@@ -27,14 +27,14 @@ interface BookData {
 interface AudioData {
   audios: {
     language: string;
-    audio: {url:string};
+    audio: {url:string,name:string};
   }[];
 }
 
 const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) => {
   const [bookData, setBookData] = useState<BookData>({summaries:[]});
   const [audioData, setAudioData] = useState<AudioData>({audios:[]});
-  const [curAudio, setCurAudio] = useState<string | null>(null);
+  const [curAudio, setCurAudio] = useState<{url:string,name:string} | null>(null);
   const [curSummary, setCurSummary] = useState<string>("");
   const [showToast,setShowToast] = useState<string>("")
   
@@ -43,14 +43,14 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
     const query = groq`*[_type == 'book' && id == $bookId] {
       summaries[][language == $curLang]
     }`;
-    console.log(curLang);
+    // console.log(curLang);
     client
       .fetch(query, { bookId, curLang })
       .then((res) => {
-        console.log("book data ", res[0].summaries);
+        // console.log("book data ", res[0].summaries);
         let temp : BookData|undefined = bookData;
         if(res[0])temp.summaries = (res[0].summaries ? res[0].summaries : [] )
-        console.log("book res ", temp);
+        // console.log("book res ", temp);
         setBookData(temp);
       })
       .catch((e) => {
@@ -64,17 +64,17 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
     const query = groq`*[_type == 'book' && id == $bookId] {
       audios[]{
        language,
-       audio { "url": asset -> url }
+       audio { "url": asset -> url, "name": asset -> originalFilename }
       }[language == $curLang]
     }`;
-    console.log(curLang);
+    // console.log(curLang);
     client
       .fetch(query, { bookId, curLang })
       .then((res) => {
-        console.log("audio data ", res[0].audios);
+        // console.log("audio data ", res[0].audios);
         let temp : AudioData|undefined = audioData;
         if(res[0])temp.audios = (res[0].audios ? res[0].audios : [] )
-        console.log("audio res ", temp);
+        // console.log("audio res ", temp);
         setAudioData(temp);
       })
       .catch((e) => {
@@ -90,7 +90,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
 
   useEffect(() => {
     // setCurSummary((bookData?.summaries.filter((data)=>data.language==curLang)?.length)?bookData?.summaries.filter((data)=>data.language==curLang)[0].summary:"");
-    console.log(" update summaries ",bookData.summaries)
+    // console.log(" update summaries ",bookData.summaries)
     setCurSummary(
       bookData?.summaries.length ? bookData?.summaries[0].summary : ""
     );
@@ -193,7 +193,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
                     type="button"
                     onClick={() => {
                       // play audio file
-                      setCurAudio(data.audio.url)
+                      setCurAudio(data.audio)
                     }}
                     className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
                   >
@@ -204,7 +204,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
             }
             
           </div>
-          <AudioPlayerModal audioFile={curAudio} onClose={() => setCurAudio(null)} />
+          <AudioPlayerModal audioFile={curAudio?.url || null} onClose={() => setCurAudio(null)} fileName={curAudio?.name || null} />
         </div>
       </>
     )

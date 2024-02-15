@@ -724,7 +724,9 @@ const handleButtonClick = async () => {
           {scrapedData.quotesURL != "" && (
             <SimilarBooks quotesURL={scrapedData.quotesURL} mobile={false} />
           )}
+          <div className="mb-2">
           <Summary bookId={slug} title={scrapedData.title} author={scrapedData.author} curLang={language}/>
+          </div>
           {scrapedData.reviews != "" && <Reviews data={scrapedData.reviews} />}
         </div>
       )}

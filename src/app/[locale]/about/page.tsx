@@ -8,6 +8,7 @@ import FAQ from '@/components/aboutpage/FAQ'
 import Features from '@/components/aboutpage/Features'
 import Stats from '@/components/aboutpage/Stats'
 
+
 const About: React.FC = () => {
 
   return (

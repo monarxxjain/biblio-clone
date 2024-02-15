@@ -17,7 +17,7 @@ export async function getPosts () {
   title,
   "image": mainImage.asset->url,
   "slug": slug.current,
-  // "body": pt::text(body),
+  "body": pt::text(body),
   publishedAt,
   "author": *[_id == ^.author._ref && _type == 'author'][0]{
     _id,
@@ -31,4 +31,16 @@ export async function getPosts () {
   "content": body
 }`)
   return posts
+}
+
+
+export async function getPostIds() {
+  const posts = await client.fetch(groq`*[_type == 'post']{ _id }`);
+  return posts;
+}
+
+export async function BookSummaryId()
+{
+  const query =await client.fetch(groq`*[_type == 'book']{id}`);
+  return query;
 }

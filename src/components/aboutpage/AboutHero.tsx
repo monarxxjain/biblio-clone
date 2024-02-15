@@ -1,7 +1,9 @@
 import Link from "next/link";
 import React from "react";
+import {useTranslations} from 'next-intl';
 
 const AboutHero: React.FC = () => {
+  const t = useTranslations('Index');
   return (
     <div className="mx-auto max-w-screen-xl px-4 pt-32 pb-24 lg:flex lg:mt-20">
       <div className="mx-auto max-w-3xl text-center">
@@ -25,7 +27,7 @@ const AboutHero: React.FC = () => {
         </h1>
         <Link href="/search">
           <button className="mt-20 font-semibold text-md lg:text-lg text-gray-900 dark:text-gray-100/90 bg-rose-500 dark:bg-[#a22045] ring ring-rose-600 dark:ring-rose-700 ring-offset-2 ring-offset-rose-100 py-4 px-6 rounded-xl shadow-lg shadow-rose-500 hover:shadow-xl hover:bg-rose-600 dark:hover:bg-rose-900 transition duration-300 delay-40 hover:delay-40">
-            Search Now
+          {t('Search Now')}  
           </button>
         </Link>
       </div>

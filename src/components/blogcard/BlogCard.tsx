@@ -38,7 +38,7 @@ const BlogCard = ({ vari }: { vari: PostData }) => {
           <h1 className="text-xl font-bold">{vari.title}</h1>
         </div>
         <div>
-          {/* <p className="line-clamp-2">{vari.body}</p> */}
+          <p className="line-clamp-2">{vari.body}</p>
         </div>
         <div className="flex flex-row flex-wrap space-x-2">
           {vari.categories.map((it) => (

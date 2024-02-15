@@ -26,6 +26,7 @@
     "openai": "^4.27.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-h5-audio-player": "^3.9.1",
     "react-paginate": "^8.1.4",
     "sanity": "^3.27.1",
     "styled-components": "^6.1.8"

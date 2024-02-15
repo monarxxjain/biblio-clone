@@ -9,6 +9,8 @@ import { groq } from "next-sanity";
 import ReadMore from "./ReadMore";
 import { useLocale } from "next-intl";
 import Toast from "../global/Toast";
+import { Audio } from "openai/resources/index.mjs";
+import AudioPlayerModal from "./AudioPlayerModal";
 
 interface ResultDataProps {
   bookId: string;
@@ -22,9 +24,17 @@ interface BookData {
     summary: string;
   }[];
 }
+interface AudioData {
+  audios: {
+    language: string;
+    audio: {url:string};
+  }[];
+}
 
 const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) => {
   const [bookData, setBookData] = useState<BookData>({summaries:[]});
+  const [audioData, setAudioData] = useState<AudioData>({audios:[]});
+  const [curAudio, setCurAudio] = useState<string | null>(null);
   const [curSummary, setCurSummary] = useState<string>("");
   const [showToast,setShowToast] = useState<string>("")
   
@@ -48,9 +58,34 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
         console.error("Error fetching book data:", e);
       });
   };
+  
+  const fetchAudio = async () => {
+    // const query = groq`*[_type == 'book' && id == $bookId][0]`;
+    const query = groq`*[_type == 'book' && id == $bookId] {
+      audios[]{
+       language,
+       audio { "url": asset -> url }
+      }[language == $curLang]
+    }`;
+    console.log(curLang);
+    client
+      .fetch(query, { bookId, curLang })
+      .then((res) => {
+        console.log("audio data ", res[0].audios);
+        let temp : AudioData|undefined = audioData;
+        if(res[0])temp.audios = (res[0].audios ? res[0].audios : [] )
+        console.log("audio res ", temp);
+        setAudioData(temp);
+      })
+      .catch((e) => {
+        if (!audioData) setAudioData({ audios: [] });
+        console.error("Error fetching audio data:", e);
+      });
+  };
 
   useEffect(() => {
     fetchBook();
+    fetchAudio();
   }, [bookId]);
 
   useEffect(() => {
@@ -61,6 +96,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
     );
   }, [bookData]);
 
+
   const [createSummaryBtn,setCreateSummaryBtn] = useState<String>("Create a new Summary")
   return (
      (
@@ -69,7 +105,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
                 {showToast && <Toast message={showToast} />}
         </div>
         <div id="bookSummary" className="dark:text-gray-100/80">
-          <button onClick={()=>fetchBook()}>Test</button>
+          
           <h2 className="font-bold text-2xl mt-0 mb-4 underline decoration-rose-600">
             Summary:
           </h2>
@@ -92,6 +128,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
             }
             <button
               type="button"
+              disabled={(createSummaryBtn==="Creating...")?true:false}
               onClick={async () => {
                 setCreateSummaryBtn("Creating...")
                 const res = await fetch(`/api/summary`, {
@@ -138,6 +175,36 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
               <ReadMore>{curSummary}</ReadMore>
             </div>
           )}
+        </div>
+
+       {/* Audio Part */}
+
+        <div id="audioSummary" className="dark:text-gray-100/80">
+          
+          <h2 className="font-bold text-2xl mt-0 mb-4 underline decoration-rose-600">
+           Audio Summary:
+          </h2>
+          <div className="flex space-x-5">
+            {
+              // bookData.summaries.filter((data)=>data.language==curLang)
+              audioData?.audios?.map((data, i) => (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // play audio file
+                      setCurAudio(data.audio.url)
+                    }}
+                    className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
+                  >
+                    Version {i + 1}
+                  </button>
+                </>
+              ))
+            }
+            
+          </div>
+          <AudioPlayerModal audioFile={curAudio} onClose={() => setCurAudio(null)} />
         </div>
       </>
     )

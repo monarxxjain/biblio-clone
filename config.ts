@@ -4,6 +4,7 @@ export const locales = ['en', 'ja'] as const;
 
 export const pathnames = {
     '/': '/',
+    '/studio': '/en/studio',
     // '/api': {
     //     en: '/api',
     //     ja: '/api'

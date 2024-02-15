@@ -21,9 +21,9 @@ interface PostData {
   categories: it[];
 }
 
-const BlogCard = ({ vari }: { vari: PostData }) => {
+const BlogCard = ({ vari,language }: { vari: PostData,language:string }) => {
   return (
-    <Link href={`/en/blogs/${vari._id}`}>
+    <Link href={`/${language}/blogs/${vari._id}`}>
       <div className="flex flex-col space-y-2 bg-primary-bg w-72 hover:scale-105 transition-transform duration-200 ease-out rounded overflow-hidden">
         <div className="w-full h-48 relative" style={{ boxShadow: '0 0 0 2px #000' }}>
           <Image src={vari.image} alt="image" layout="fill" objectFit="cover" />

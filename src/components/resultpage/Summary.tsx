@@ -11,6 +11,7 @@ import { useLocale } from "next-intl";
 import Toast from "../global/Toast";
 import { Audio } from "openai/resources/index.mjs";
 import AudioPlayerModal from "./AudioPlayerModal";
+import { LoadingBlock } from "sanity";
 
 interface ResultDataProps {
   bookId: string;
@@ -47,7 +48,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
     client
       .fetch(query, { bookId, curLang })
       .then((res) => {
-        // console.log("book data ", res[0].summaries);
+        console.log("book data ", res);
         let temp : BookData|undefined = bookData;
         if(res[0])temp.summaries = (res[0].summaries ? res[0].summaries : [] )
         // console.log("book res ", temp);
@@ -105,10 +106,11 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
                 {showToast && <Toast message={showToast} />}
         </div>
         <div id="bookSummary" className="dark:text-gray-100/80">
-          
+          <button onClick={()=>{fetchBook()}}>test</button>
           <h2 className="font-bold text-2xl mt-0 mb-4 underline decoration-rose-600">
             Summary:
           </h2>
+          {/* <LoadingBlock/> */}
           <div className="flex space-x-5">
             {
               // bookData.summaries.filter((data)=>data.language==curLang)
@@ -172,7 +174,11 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
           </div>
           {curSummary && (
             <div>
-              <ReadMore>{curSummary}</ReadMore>
+              <pre className="whitespace-pre-wrap" >
+              <ReadMore>
+                {`${curSummary}`}
+              </ReadMore>
+              </pre>
             </div>
           )}
         </div>

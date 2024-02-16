@@ -6,15 +6,15 @@ import React, { useState } from "react";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
 import { useLocale } from "next-intl";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
+import { redirect } from "next/dist/server/api-utils";
 
 
 
 const Header: React.FC = () => {
   const lang = useLocale();
-  const [user,setUser] = useState<{name?:string|null|undefined,email?:string|null|undefined,image?:string|null|undefined}|null>(null);
-  getSession().then((res)=>setUser(res?.user||null))
+  const session = useSession();
 
   return (
     <header className="p-4 dark:bg-[#881133] text-gray-900 dark:text-gray-100/90 border-b-2 dark:border-b-0 border-rose-300">
@@ -119,24 +119,27 @@ const Header: React.FC = () => {
           </li>
         </ul>
         <div>{
-          (user && (
+          (session.data?.user && (
             <div className="relative inline-block align-middle">
-            <div className="flex flex-col items-center justify-center align-middle">
+            <div className="flex flex-col space-y-2 items-center justify-center align-middle">
               <div
-                className="flex items-center focus:outline-none"
+                className="flex space-x-1 items-center focus:outline-none "
                 id="user-menu"
                 aria-expanded="true"
                 aria-haspopup="true"
               >
                 <img
                   className="h-8 w-8 rounded-full"
-                  src={user?.image || '/default-profile-icon.jpg'}
+                  src={session?.data.user?.image || '/default-profile-icon.jpg'}
                   alt="User Profile"
                 />
+                <span>
+                  {`${session?.data.user.name}`}
+                </span>
               </div>
               <button
                 onClick={() => signOut()}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mt-2"
+                className="  ont-semibold text-md text-gray-900 dark:text-gray-100/90 bg-rose-500 dark:bg-[#a22045] ring ring-rose-600 dark:ring-rose-700 ring-offset-2 ring-offset-rose-100  px-5 rounded-xl shadow-lg shadow-rose-500 hover:shadow-xl hover:bg-rose-600 dark:hover:bg-rose-900 transition duration-300 delay-40 hover:delay-40"
                 role="menuitem"
               >
                 Logout
@@ -144,11 +147,10 @@ const Header: React.FC = () => {
             </div>
           </div>
           )) || (
-              <Link href={"/"+lang+"/login"}>
-
-            <button onClick={()=>{console.log("Login clicked ");}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Login
-          </button>
+            <Link href={"/"+lang+"/login"}>
+              <button className="  ont-semibold text-md text-gray-900 dark:text-gray-100/90 bg-rose-500 dark:bg-[#a22045] ring ring-rose-600 dark:ring-rose-700 ring-offset-2 ring-offset-rose-100 py-4 px-5 rounded-xl shadow-lg shadow-rose-500 hover:shadow-xl hover:bg-rose-600 dark:hover:bg-rose-900 transition duration-300 delay-40 hover:delay-40">
+              Login
+            </button>
               </Link>
           )
           

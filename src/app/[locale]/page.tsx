@@ -9,12 +9,15 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
-export default function Home() {
+export default function Home({params}:{params:{locale:string}}) {
   const t = useTranslations("Index")
     const session = useSession({
     required: true,
     onUnauthenticated() {
-    redirect('/en/login');
+      const cnt = parseInt(localStorage.getItem('visitCount')||'0');
+      
+      if(((cnt)/2)>=(parseInt(process.env.NEXT_PUBLIC_VISIT_ALLOWED || '5')))
+      redirect(`/${params.locale}/login`);
     },
   });
 

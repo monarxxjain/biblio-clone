@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang={locale}>
       <body className={inter.className}>
-        <NextIntlClientProvider locale="en">
+        <NextIntlClientProvider locale={locale}>
           <SessionProvider>
             <Providers>
               {children}

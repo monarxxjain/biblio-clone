@@ -7,6 +7,7 @@ import Footer from '@/components/global/Footer'
 import Loader from '@/components/global/Loader'
 import ErrorMessage from '@/components/global/ErrorMessage'
 import ResultData from '@/components/resultpage/ResultData'
+import { getSession, useSession } from 'next-auth/react'
 
 interface Params {
   slug: string;
@@ -42,10 +43,24 @@ interface ScrapedData {
 const Slug = ({params}: {params: Params}) => {
   const router = useRouter()
   const slug  = params.slug;
+
   const [scrapedData, setScrapedData] = useState<ScrapedData>()
   const [error, setError] = useState(false)
-
+  
   useEffect(() => {
+
+    getSession().then((res)=>{
+      if(res?.user?.email)
+      {
+        localStorage.setItem('visitCount','0');
+      }else{
+        const cnt = parseInt(localStorage.getItem('visitCount')||'0');
+        console.log("current cnt ",cnt);
+        localStorage.setItem('visitCount',(cnt+1).toString())
+        if(((cnt+1)/2)>=(parseInt(process.env.NEXT_PUBLIC_VISIT_ALLOWED || '5')))
+        router.push(`/${params.locale}/login`)
+      }
+    })
     const fetchData = async () => {
       const res = await fetch(`/api/book-scraper`, {
         method: 'POST',

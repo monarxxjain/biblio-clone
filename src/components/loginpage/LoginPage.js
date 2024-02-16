@@ -93,7 +93,7 @@ const LoginPage = () => {
           <div className='text-center bg-white '>
             <div
               onClick={() => router.push('/forgotpassword')}
-              href='javascript:void(0)'
+              href='#!'
               className=' hover:text-indigo-800 text-indigo-500 text-0.1rem  sm:text-0.1 rem'
             >
               Forgot password?

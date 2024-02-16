@@ -202,7 +202,7 @@ export const POST = async (req:any, res:any) => {
         lastScraped: lastScraped,
       });
     } catch (error) {
-      console.error("An error has occurred with the scraper.");
+      console.error("An error has occurred with the scraper.",error);
     return NextResponse.json({
       status: "Error - Invalid Query",
       scrapeURL: scrapeURL,

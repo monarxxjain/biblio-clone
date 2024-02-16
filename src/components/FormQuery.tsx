@@ -11,6 +11,7 @@ const FormQuery: React.FC = () => {
   // When the button is clicked/submitted push the input value to the search url
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("input value ",inputValue)
     if (inputValue.includes("http" || "www")) {
       if (inputValue.includes("https://www.goodreads.com")) {
         router.push(`${inputValue.replace("https://www.goodreads.com", "")}`);
@@ -18,7 +19,7 @@ const FormQuery: React.FC = () => {
         setValidQuery(false);
       }
     } else {
-      router.push(`/search/${inputValue.replaceAll("/", "-")}`);
+      router.push(`/search/${inputValue.replaceAll("/", "-").replaceAll(" ","-")}`);
     }
   };
 

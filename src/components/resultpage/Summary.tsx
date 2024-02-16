@@ -12,6 +12,7 @@ import Toast from "../global/Toast";
 import { Audio } from "openai/resources/index.mjs";
 import AudioPlayerModal from "./AudioPlayerModal";
 import { LoadingBlock } from "sanity";
+import LoadingSpinner from "../global/LoadingSpinner";
 
 interface ResultDataProps {
   bookId: string;
@@ -38,51 +39,59 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
   const [curAudio, setCurAudio] = useState<{url:string,name:string} | null>(null);
   const [curSummary, setCurSummary] = useState<string>("");
   const [showToast,setShowToast] = useState<string>("")
+  const [bookLoading,setBookLoading] = useState<boolean>(false);
+  const [audioLoading,setAudioLoading] = useState<boolean>(false);
   
   const fetchBook = async () => {
     // const query = groq`*[_type == 'book' && id == $bookId][0]`;
+    setBookLoading(true);
     const query = groq`*[_type == 'book' && id == $bookId] {
       summaries[][language == $curLang]
     }`;
     // console.log(curLang);
     client
-      .fetch(query, { bookId, curLang })
-      .then((res) => {
-        console.log("book data ", res);
-        let temp : BookData|undefined = bookData;
-        if(res[0])temp.summaries = (res[0].summaries ? res[0].summaries : [] )
-        // console.log("book res ", temp);
-        setBookData(temp);
-      })
-      .catch((e) => {
-        if (!bookData) setBookData({ summaries: [] });
-        console.error("Error fetching book data:", e);
-      });
-  };
-  
-  const fetchAudio = async () => {
-    // const query = groq`*[_type == 'book' && id == $bookId][0]`;
+    .fetch(query, { bookId, curLang })
+    .then((res) => {
+      console.log("book data ", res);
+      let temp : BookData|undefined = bookData;
+      if(res[0])temp.summaries = (res[0].summaries ? res[0].summaries : [] )
+      // console.log("book res ", temp);
+    setBookData(temp);
+    setBookLoading(false);
+  })
+  .catch((e) => {
+    if (!bookData) setBookData({ summaries: [] });
+    console.error("Error fetching book data:", e);
+    setBookLoading(false);
+  });
+};
+
+const fetchAudio = async () => {
+  // const query = groq`*[_type == 'book' && id == $bookId][0]`;
+    setAudioLoading(true);
     const query = groq`*[_type == 'book' && id == $bookId] {
       audios[]{
-       language,
-       audio { "url": asset -> url, "name": asset -> originalFilename }
+        language,
+        audio { "url": asset -> url, "name": asset -> originalFilename }
       }[language == $curLang]
     }`;
     // console.log(curLang);
     client
-      .fetch(query, { bookId, curLang })
-      .then((res) => {
-        // console.log("audio data ", res[0].audios);
-        let temp : AudioData|undefined = audioData;
-        if(res[0])temp.audios = (res[0].audios ? res[0].audios : [] )
-        // console.log("audio res ", temp);
-        setAudioData(temp);
-      })
-      .catch((e) => {
-        if (!audioData) setAudioData({ audios: [] });
-        console.error("Error fetching audio data:", e);
-      });
-  };
+    .fetch(query, { bookId, curLang })
+    .then((res) => {
+      // console.log("audio data ", res[0].audios);
+      let temp : AudioData|undefined = audioData;
+      if(res[0])temp.audios = (res[0].audios ? res[0].audios : [] )
+      // console.log("audio res ", temp);
+    setAudioData(temp);
+    setAudioLoading(false);
+  })
+  .catch((e) => {
+    if (!audioData) setAudioData({ audios: [] });
+    console.error("Error fetching audio data:", e);
+    setAudioLoading(false);
+  });
+};
 
   useEffect(() => {
     fetchBook();
@@ -106,14 +115,16 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
                 {showToast && <Toast message={showToast} />}
         </div>
         <div id="bookSummary" className="dark:text-gray-100/80">
-          <button onClick={()=>{fetchBook()}}>test</button>
+          {/* <button onClick={()=>{fetchBook()}}>test</button> */}
           <h2 className="font-bold text-2xl mt-0 mb-4 underline decoration-rose-600">
             Summary:
           </h2>
           {/* <LoadingBlock/> */}
           <div className="flex space-x-5">
+            
+            {bookLoading && (<LoadingSpinner/>)}
             {
-              // bookData.summaries.filter((data)=>data.language==curLang)
+              // bookData.summaries.filter((data)=>data.language==curLang)              
               bookData?.summaries?.map((data, i) => (
                 <>
                   <button
@@ -122,7 +133,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
                       setCurSummary(data.summary);
                     }}
                     className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
-                  >
+                    >
                     Version {i + 1}
                   </button>
                 </>
@@ -168,7 +179,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
                 setCreateSummaryBtn("Create a new Summary")
               }}
               className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
-            >
+              >
               {createSummaryBtn}
             </button>
           </div>
@@ -191,6 +202,7 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
            Audio Summary:
           </h2>
           <div className="flex space-x-5">
+            {audioLoading && (<LoadingSpinner/>)}
             {
               // bookData.summaries.filter((data)=>data.language==curLang)
               audioData?.audios?.map((data, i) => (

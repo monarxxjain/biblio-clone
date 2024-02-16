@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 type Props = {
   children: React.ReactNode;
   params: {
-    locale: "en" | "ja";
+    locale: "en" | "vi";
   };
 };
 

@@ -2,13 +2,20 @@
 "use client"
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @next/next/no-html-link-for-pages */
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
 import { useLocale } from "next-intl";
+import { getSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+
+
 
 const Header: React.FC = () => {
   const lang = useLocale();
+  const [user,setUser] = useState<{name?:string|null|undefined,email?:string|null|undefined,image?:string|null|undefined}|null>(null);
+  getSession().then((res)=>setUser(res?.user||null))
+
   return (
     <header className="p-4 dark:bg-[#881133] text-gray-900 dark:text-gray-100/90 border-b-2 dark:border-b-0 border-rose-300">
       <div className="flex justify-evenly items-center h-16">
@@ -111,6 +118,41 @@ const Header: React.FC = () => {
             <ThemeToggle />
           </li>
         </ul>
+        <div>{
+          (user && (
+            <div className="relative inline-block align-middle">
+            <div className="flex flex-col items-center justify-center align-middle">
+              <div
+                className="flex items-center focus:outline-none"
+                id="user-menu"
+                aria-expanded="true"
+                aria-haspopup="true"
+              >
+                <img
+                  className="h-8 w-8 rounded-full"
+                  src={user?.image || '/default-profile-icon.jpg'}
+                  alt="User Profile"
+                />
+              </div>
+              <button
+                onClick={() => signOut()}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mt-2"
+                role="menuitem"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+          )) || (
+              <Link href={"/"+lang+"/login"}>
+
+            <button onClick={()=>{console.log("Login clicked ");}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Login
+          </button>
+              </Link>
+          )
+          
+          }</div>
       </div>
     </header>
   );

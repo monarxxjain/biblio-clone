@@ -5,7 +5,7 @@ import Link from "next/link";
 interface LibraryData {
   title: string;
   slug: string;
-  author: AuthorData[];
+  author: AuthorData;
   rating: string;
   timestamp: number;
   cover?: string;
@@ -14,8 +14,9 @@ interface LibraryListProps {
   libraryData: LibraryData[];
 }
 interface AuthorData {
-  name: string;
+  id: number;
   url: string;
+  name: string;
 }
 
 const LibraryList: React.FC<LibraryListProps> = ({ libraryData }) => {
@@ -39,15 +40,15 @@ const LibraryList: React.FC<LibraryListProps> = ({ libraryData }) => {
                       {data.title}
                     </h3>
                     {data.author &&
-                      data.author.map((data:AuthorData,i:number) => (
-                        <span key={i}>
-                          <Link href={data.url}>
-                            <a className="text-md hover:underline hover:text-rose-600">
-                              {(i ? ", " : "") + data.name}
-                            </a>
-                          </Link>
-                        </span>
-                      ))}
+                      <span>
+                        <Link href={data.author.url}>
+                          <span className="text-md hover:underline hover:text-rose-600">
+                            {data.author.name}
+                          </span>
+                        </Link>
+                      </span>
+
+                    }
                     <div className="flex items-center mt-4">
                       <svg
                         width="24"

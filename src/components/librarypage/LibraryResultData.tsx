@@ -3,6 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { openDB } from 'idb'
 import SmallLoader from '../global/SmallLoader'
 import LibraryList from './LibraryList'
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { getDoc } from 'firebase/firestore';
+import { doc} from "firebase/firestore";
+import { auth } from "@/lib/firebase";
+
+
 interface LibraryResultDataProps {
   currentTab: string;
 }
@@ -13,22 +20,49 @@ const LibraryResultData: React.FC<LibraryResultDataProps> = ({ currentTab }) => 
   const [savedBooks, setSavedBooks] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    const getBooks = async () => {
-      const db = await openDB('library', 1, {
-        upgrade (db) {
-          if (!db.objectStoreNames.contains('books')) {
-            db.createObjectStore('books')
-          }
-        }
-      })
-      const books = await db.getAll('books')
-      setSavedBooks(books)
-      setIsLoading(false)
-    }
+//   useEffect(() => {
+//     const getBooks = async () => {
+//       const db = await openDB('library', 1, {
+//         upgrade (db) {
+//           if (!db.objectStoreNames.contains('books')) {
+//             db.createObjectStore('books')
+//           }
+//         }
+//       })
+//       const books = await db.getAll('books')
+//       setSavedBooks(books)
+//       setIsLoading(false)
+//     }
 
-    getBooks()
-  }, [])
+//     getBooks()
+//   }, [])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const firestore = getFirestore();
+      try {
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const uid = user.uid;
+            const userDocRef = doc(firestore, 'library', uid);
+            const userDoc = await getDoc(userDocRef);
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              if (userData.books) {
+                setSavedBooks(userData.books);
+              }
+            }
+          }
+          setIsLoading(false);
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>

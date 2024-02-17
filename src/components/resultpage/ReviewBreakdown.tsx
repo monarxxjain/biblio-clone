@@ -3,13 +3,13 @@ interface ReviewBreakdownProps {
   data: {
     scrapeURL: string;
     reviewBreakdown: {
-      rating5: any;
-      rating4: any;
-      rating3: any;
-      rating2: any;
-      rating1: any;
+      rating5: string;
+      rating4: string;
+      rating3: string;
+      rating2: string;
+      rating1: string;
     };
-    ratingCount: any;
+    ratingCount: string;
   };
 }
 
@@ -38,8 +38,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
           <div
             style={{
               width: `${Math.round(
-                (data.reviewBreakdown.rating5.replaceAll(",", "") /
-                  data.ratingCount.replaceAll(",", "")) *
+                (parseInt(data.reviewBreakdown.rating5.replaceAll(",", "")) /
+                parseInt(data.ratingCount.replaceAll(",", ""))) *
                   100
               )}%`,
               backgroundColor: "#9E1239",
@@ -51,8 +51,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
         <div>
           <span style={{ marginLeft: "10px" }}>
             {Math.round(
-              (data.reviewBreakdown.rating5.replaceAll(",", "") /
-                data.ratingCount.replaceAll(",", "")) *
+              (parseInt(data.reviewBreakdown.rating5.replaceAll(",", "")) /
+              parseInt(data.ratingCount.replaceAll(",", "")) )*
                 100
             )}
             %
@@ -68,8 +68,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
           <div
             style={{
               width: `${Math.round(
-                (data.reviewBreakdown.rating4.replaceAll(",", "") /
-                  data.ratingCount.replaceAll(",", "")) *
+                (parseInt(data.reviewBreakdown.rating4.replaceAll(",", "")) /
+                parseInt(data.ratingCount.replaceAll(",", "")) )*
                   100
               )}%`,
               backgroundColor: "#9E1239",
@@ -81,8 +81,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
         <div>
           <span style={{ marginLeft: "10px" }}>
             {Math.round(
-              (data.reviewBreakdown.rating4.replaceAll(",", "") /
-                data.ratingCount.replaceAll(",", "")) *
+              (parseInt(data.reviewBreakdown.rating4.replaceAll(",", "") )/
+              parseInt(data.ratingCount.replaceAll(",", ""))) *
                 100
             )}
             %
@@ -98,8 +98,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
           <div
             style={{
               width: `${Math.round(
-                (data.reviewBreakdown.rating3.replaceAll(",", "") /
-                  data.ratingCount.replaceAll(",", "")) *
+                (parseInt(data.reviewBreakdown.rating3.replaceAll(",", ""))/
+                parseInt(data.ratingCount.replaceAll(",", ""))) *
                   100
               )}%`,
               backgroundColor: "#9E1239",
@@ -111,8 +111,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
         <div>
           <span style={{ marginLeft: "10px" }}>
             {Math.round(
-              (data.reviewBreakdown.rating3.replaceAll(",", "") /
-                data.ratingCount.replaceAll(",", "")) *
+              (parseInt(data.reviewBreakdown.rating3.replaceAll(",", ""))/
+              parseInt(data.ratingCount.replaceAll(",", ""))) *
                 100
             )}
             %
@@ -128,8 +128,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
           <div
             style={{
               width: `${Math.round(
-                (data.reviewBreakdown.rating2.replaceAll(",", "") /
-                  data.ratingCount.replaceAll(",", "")) *
+                (parseInt(data.reviewBreakdown.rating2.replaceAll(",", "")) /
+                parseInt(data.ratingCount.replaceAll(",", "")) )*
                   100
               )}%`,
               backgroundColor: "#9E1239",
@@ -142,8 +142,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
           <span
             style={
               Math.round(
-                (data.reviewBreakdown.rating2.replaceAll(",", "") /
-                  data.ratingCount.replaceAll(",", "")) *
+                (parseInt(data.reviewBreakdown.rating2.replaceAll(",", "")) /
+                parseInt(data.ratingCount.replaceAll(",", "")) )*
                   100
               ) < 10
                 ? { marginLeft: "20px" }
@@ -151,8 +151,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
             }
           >
             {Math.round(
-              (data.reviewBreakdown.rating2.replaceAll(",", "") /
-                data.ratingCount.replaceAll(",", "")) *
+              (parseInt(data.reviewBreakdown.rating2.replaceAll(",", "")) /
+              parseInt(data.ratingCount.replaceAll(",", "")) )*
                 100
             )}
             %
@@ -168,8 +168,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
           <div
             style={{
               width: `${Math.round(
-                (data.reviewBreakdown.rating1.replaceAll(",", "") /
-                  data.ratingCount.replaceAll(",", "")) *
+                (parseInt(data.reviewBreakdown.rating1.replaceAll(",", ""))/
+                parseInt(data.ratingCount.replaceAll(",", ""))) *
                   100
               )}%`,
               backgroundColor: "#9E1239",
@@ -182,8 +182,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
           <span
             style={
               Math.round(
-                (data.reviewBreakdown.rating1.replaceAll(",", "") /
-                  data.ratingCount.replaceAll(",", "")) *
+                (parseInt(data.reviewBreakdown.rating1.replaceAll(",", "")) /
+                parseInt(data.ratingCount.replaceAll(",", ""))) *
                   100
               ) < 10
                 ? { marginLeft: "20px" }
@@ -191,8 +191,8 @@ const ReviewBreakdown: React.FC<ReviewBreakdownProps> = ({ data }) => {
             }
           >
             {Math.round(
-              (data.reviewBreakdown.rating1.replaceAll(",", "") /
-                data.ratingCount.replaceAll(",", "")) *
+              (parseInt(data.reviewBreakdown.rating1.replaceAll(",", "")) /
+              parseInt(data.ratingCount.replaceAll(",", ""))) *
                 100
             )}
             %

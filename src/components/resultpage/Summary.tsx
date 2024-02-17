@@ -17,7 +17,7 @@ import LoadingSpinner from "../global/LoadingSpinner";
 interface ResultDataProps {
   bookId: string;
   title: string;
-  author: string;
+  author: any;
   curLang: string;
 }
 interface BookData {

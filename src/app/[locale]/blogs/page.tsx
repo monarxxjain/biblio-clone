@@ -18,8 +18,6 @@ const blogs: React.FC<BlogsProps> = ({ params }) => {
             <Meta title={'Blogs'} />
             <Header />
             <BlogSection language = {params.locale} />
-
-
             <Footer />
         </div>
     )

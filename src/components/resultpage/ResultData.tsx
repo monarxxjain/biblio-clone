@@ -15,8 +15,8 @@ import Summary from "./Summary";
 
 
 import { onAuthStateChanged } from 'firebase/auth';
-import { getFirestore,getDoc } from 'firebase/firestore';
-import { doc, updateDoc, arrayRemove, arrayUnion,setDoc } from "firebase/firestore"; 
+import { getFirestore, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { auth } from "@/lib/firebase";
 
 const firestore = getFirestore();
@@ -31,18 +31,18 @@ interface ScrapedData {
   isbn: string;
   lang: string;
   scrapeURL: string;
-  reviewBreakdown: any;  
+  reviewBreakdown: any;
   quotesURL: string;
-  questions:any;
-  cover:any;
-  author:any;
-  rating:any;
-  seriesURL:any;
-  series:any;
-  quotes:any;
-  questionsURL:any;
-  genres:any;
-  reviews:any;
+  questions: string;
+  cover: string;
+  author: Author[];
+  rating: string;
+  seriesURL: string;
+  series: string;
+  reviews: any;
+  quotes: string;
+  questionsURL: string;
+  genres: string;
 
 }
 
@@ -51,14 +51,18 @@ interface ResultDataProps {
   slug: string;
   language: string;
 }
-
+interface Author {
+  name: string;
+  id: string;
+  url: string;
+}
 const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [showToast, setShowToast] = useState("");
   const params = useParams();
-  
+
   // async function initializeDB() {
   //   try {
   //     return await openDB("library", 1, {
@@ -73,76 +77,102 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) 
   //   }
   // }
 
- // BOOKMARK WITH FIREBASE
- useEffect(() => {
-  const fetchData = async () => {
-    try {
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          const uid = user.uid;
-          const userDocRef = doc(firestore, 'library', uid);
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            if (userData.books && userData.books.includes(slug)) {
-              setIsSaved(true);
+  // BOOKMARK WITH FIREBASE
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const uid = user.uid;
+            const userDocRef = doc(firestore, 'library', uid);
+            const userDoc = await getDoc(userDocRef);
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              if (userData.books && userData.books.some((book: any) => book.slug === slug)) {
+                setIsSaved(true);
+              } else {
+                setIsSaved(false);
+              }
             } else {
               setIsSaved(false);
             }
-          } else {
-            setIsSaved(false);
           }
-        }
-      });
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  fetchData();
-}, []);
+    fetchData();
+  }, []);
 
-const handleButtonClick = async () => {
-  const user = auth.currentUser;
-  if (user) {
-    const uid = user.uid;
-    const userDocRef = doc(firestore, 'library', uid);
+  const handleButtonClick = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const uid = user.uid;
+      const userDocRef = doc(firestore, 'library', uid);
 
-    try {
-      console.log("test ",userDocRef);
-      const docSnap = await getDoc(userDocRef);
-      if (docSnap.exists()) {
-        if (isSaved) {
-          await updateDoc(userDocRef, {
-            books: arrayRemove(slug)
-          });
-          setShowToast("Book removed from library");
-          setTimeout(() => setShowToast(""), 3000);
+      try {
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          const existingBookIndex = userData.books.findIndex((book: any) => book.slug === slug);
+          const updatedBooks = [...userData.books];
+
+          if (existingBookIndex !== -1) {
+            updatedBooks.splice(existingBookIndex, 1);
+            setShowToast("Book removed from library");
+          } else {
+            updatedBooks.push({
+              slug: slug,
+              timestamp: Date.now(),
+              cover: scrapedData.cover,
+              title: scrapedData.title,
+              author: {
+                name: scrapedData.author[0].name,
+                id: scrapedData.author[0].id,
+                url: scrapedData.author[0].url
+              },
+
+              rating: scrapedData.rating,
+            });
+            setShowToast("Book added to library");
+          }
+
+          if (updatedBooks.length === 0) {
+            await deleteDoc(userDocRef);
+
+          } else {
+            await updateDoc(userDocRef, {
+              books: updatedBooks
+            });
+          }
         } else {
-          
-          await updateDoc(userDocRef, {
-            books: arrayUnion(slug)
+          await setDoc(userDocRef, {
+            books: [{
+              slug: slug,
+              timestamp: Date.now(),
+              cover: scrapedData.cover,
+              title: scrapedData.title,
+              author: {
+                name: scrapedData.author[0].name,
+                id: scrapedData.author[0].id,
+                url: scrapedData.author[0].url
+              },
+              rating: scrapedData.rating,
+            }]
           });
           setShowToast("Book added to library");
-          setTimeout(() => setShowToast(""), 3000);
         }
-      } 
-      else {
-        await setDoc(userDocRef, {
-          books: [slug]
-       });
+        setIsSaved(!isSaved);
+        setTimeout(() => setShowToast(""), 3000);
+      } catch (error) {
+        console.error('Error updating document:', error);
       }
-      setIsSaved(!isSaved);
-    } 
-    
-    catch (error) {
-      console.error('Error updating document:', error);
     }
-  }
-};
-
-//
-
+  };
+  //
 
   // useEffect(() => {
   //   const savedBookCheck = async () => {
@@ -250,7 +280,7 @@ const handleButtonClick = async () => {
             </h1>
             <div className="mt-2 mx-auto max-w-sm xl:max-w-md">
               <span className="font-semibold">By:</span>{" "}
-              {scrapedData.author.map((data:any, i:any) => (
+              {scrapedData.author.map((data: any, i: any) => (
                 <span key={i}>
                   <a
                     className="text-md hover:underline hover:text-rose-600"
@@ -281,13 +311,12 @@ const handleButtonClick = async () => {
                       <div>
 
 
-                      aasdf
+                        aasdf
                       </div>
                       <svg
                         viewBox="0 0 257 445"
-                        className={`w-[50%]  ${
-                          !isSaved ? "text-gray-50" : "text-[#ed8a19]"
-                        } hover:text-[#ed8a19] border-black`}
+                        className={`w-[50%]  ${!isSaved ? "text-gray-50" : "text-[#ed8a19]"
+                          } hover:text-[#ed8a19] border-black`}
                         fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg"
                       >
@@ -314,7 +343,7 @@ const handleButtonClick = async () => {
                   <button
                     onClick={() => {
 
-                      handleButtonClick ();
+                      handleButtonClick();
                       // !isSaved ? setIsSaved(true) : setIsSaved(false);
                       // setIsClicked(true);
                     }}
@@ -322,9 +351,8 @@ const handleButtonClick = async () => {
                   >
                     <svg
                       viewBox="0 0 257 445"
-                      className={`w-[50%]  ${
-                        !isSaved ? "text-gray-50" : "text-[#ed8a19]"
-                      } hover:text-[#ed8a19] border-black`}
+                      className={`w-[50%]  ${!isSaved ? "text-gray-50" : "text-[#ed8a19]"
+                        } hover:text-[#ed8a19] border-black`}
                       fill="currentColor"
                       xmlns="http://www.w3.org/2000/svg"
                     >
@@ -725,7 +753,7 @@ const handleButtonClick = async () => {
             <SimilarBooks quotesURL={scrapedData.quotesURL} mobile={false} />
           )}
           <div className="mb-2">
-          <Summary bookId={slug} title={scrapedData.title} author={scrapedData.author} curLang={language}/>
+            <Summary bookId={slug} title={scrapedData.title} author={scrapedData.author} curLang={language} />
           </div>
           {scrapedData.reviews != "" && <Reviews data={scrapedData.reviews} />}
         </div>

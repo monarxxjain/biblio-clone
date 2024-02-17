@@ -2,13 +2,20 @@
 "use client"
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @next/next/no-html-link-for-pages */
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
 import { useLocale } from "next-intl";
+import { getSession, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { redirect } from "next/dist/server/api-utils";
+
+
 
 const Header: React.FC = () => {
   const lang = useLocale();
+  const session = useSession();
+
   return (
     <header className="p-4 dark:bg-[#881133] text-gray-900 dark:text-gray-100/90 border-b-2 dark:border-b-0 border-rose-300">
       <div className="flex justify-evenly items-center h-16">
@@ -111,6 +118,43 @@ const Header: React.FC = () => {
             <ThemeToggle />
           </li>
         </ul>
+        <div>{
+          (session.data?.user && (
+            <div className="relative inline-block align-middle">
+            <div className="flex flex-col space-y-2 items-center justify-center align-middle">
+              <div
+                className="flex space-x-1 items-center focus:outline-none "
+                id="user-menu"
+                aria-expanded="true"
+                aria-haspopup="true"
+              >
+                <img
+                  className="h-8 w-8 rounded-full"
+                  src={session?.data.user?.image || '/default-profile-icon.jpg'}
+                  alt="User Profile"
+                />
+                <span>
+                  {`${session?.data.user.name}`}
+                </span>
+              </div>
+              <button
+                onClick={() => signOut()}
+                className="  ont-semibold text-md text-gray-900 dark:text-gray-100/90 bg-rose-500 dark:bg-[#a22045] ring ring-rose-600 dark:ring-rose-700 ring-offset-2 ring-offset-rose-100  px-5 rounded-xl shadow-lg shadow-rose-500 hover:shadow-xl hover:bg-rose-600 dark:hover:bg-rose-900 transition duration-300 delay-40 hover:delay-40"
+                role="menuitem"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+          )) || (
+            <Link href={"/"+lang+"/login"}>
+              <button className="  ont-semibold text-md text-gray-900 dark:text-gray-100/90 bg-rose-500 dark:bg-[#a22045] ring ring-rose-600 dark:ring-rose-700 ring-offset-2 ring-offset-rose-100 py-4 px-5 rounded-xl shadow-lg shadow-rose-500 hover:shadow-xl hover:bg-rose-600 dark:hover:bg-rose-900 transition duration-300 delay-40 hover:delay-40">
+              Login
+            </button>
+              </Link>
+          )
+          
+          }</div>
       </div>
     </header>
   );

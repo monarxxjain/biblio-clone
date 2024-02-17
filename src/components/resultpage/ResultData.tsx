@@ -49,9 +49,10 @@ interface ScrapedData {
 interface ResultDataProps {
   scrapedData: ScrapedData;
   slug: string;
+  language: string;
 }
 
-const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug }) => {
+const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -723,7 +724,9 @@ const handleButtonClick = async () => {
           {scrapedData.quotesURL != "" && (
             <SimilarBooks quotesURL={scrapedData.quotesURL} mobile={false} />
           )}
-          <Summary bookId={slug} title={scrapedData.title} author={scrapedData.author}/>
+          <div className="mb-2">
+          <Summary bookId={slug} title={scrapedData.title} author={scrapedData.author} curLang={language}/>
+          </div>
           {scrapedData.reviews != "" && <Reviews data={scrapedData.reviews} />}
         </div>
       )}

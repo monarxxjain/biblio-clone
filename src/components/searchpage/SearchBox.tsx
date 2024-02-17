@@ -18,7 +18,7 @@ const SearchBox: React.FC<SearchBoxProps> = (props) => {
       e.preventDefault();
       console.log(queryType)
       if (!inputValue.includes("https://")) {
-        router.push(`/search/${inputValue.replaceAll("/", "-")}?type=${queryType}`);
+        router.push(`/search/${inputValue.replaceAll("/", "-").replaceAll(" ","-")}?type=${queryType}`);
       } else {
         setValidQuery(false);
       }

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/firebase-adapter": "^1.4.0",
     "@nextui-org/react": "^2.2.9",
     "@sanity/image-url": "^1.0.2",
     "@sanity/vision": "^3.27.1",
@@ -16,6 +17,7 @@
     "cheerio": "^1.0.0-rc.12",
     "dompurify": "^2.4.3",
     "firebase": "^10.8.0",
+    "firebase-admin": "^11.11.1",
     "idb": "^8.0.0",
     "next": "^14.1.0",
     "next-auth": "^4.24.5",
@@ -26,6 +28,7 @@
     "openai": "^4.27.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-h5-audio-player": "^3.9.1",
     "react-paginate": "^8.1.4",
     "sanity": "^3.27.1",
     "styled-components": "^6.1.8"

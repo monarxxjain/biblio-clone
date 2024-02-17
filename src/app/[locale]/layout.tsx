@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 type Props = {
   children: React.ReactNode;
   params: {
-    locale: "en" | "ja";
+    locale: "en" | "vi";
   };
 };
 
@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang={locale}>
       <body className={inter.className}>
-        <NextIntlClientProvider locale="en">
+        <NextIntlClientProvider locale={locale}>
           <SessionProvider>
             <Providers>
               {children}

@@ -29,7 +29,7 @@ const nextConfig = withPWA({
     ],
   },
   // i18n: {
-  //   locales: ['en', 'ja'],
+  //   locales: ['en', 'vi'],
   //   defaultLocale: 'en'
   // },
   async rewrites () {

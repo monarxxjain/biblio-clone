@@ -10,10 +10,9 @@ const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
-  const session =useSession();
-  const lang = useLocale();
-  if(session.status ==="authenticated")
-  {
+  const session = useSession()
+  const lang = useLocale()
+  if (session.status === 'authenticated') {
     router.push('/')
   }
   return (
@@ -27,7 +26,7 @@ const LoginPage = () => {
             <p className=''>
               Don't have an account?{' '}
               <Link
-                href={'/'+lang+'/signup'}
+                href={'/' + lang + '/signup'}
                 className='font-medium text-indigo-600 hover:text-indigo-500'
               >
                 Sign up
@@ -36,15 +35,18 @@ const LoginPage = () => {
           </div>
         </div>
         <div className='bg-white  p-4 py-6 space-y-8 sm:p-6 sm:rounded-lg'>
-          <div className='grid grid-cols-3 gap-x-3'>
-            <button onClick={()=>signIn("google")} className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'>
+          <div className='grid grid-cols-2 gap-x-3'>
+            <button
+              onClick={() => signIn('google')}
+              className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'
+            >
               <img src='/login/google.svg' alt='' width='28' height='25' />
             </button>
-            <button className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'>
-              <img src='/login/twitter.svg' alt='' width='28' height='25' />
-            </button>
-            <button className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'>
-              <img src='/login/github.svg' alt='' width='28' height='25' />
+            <button
+              onClick={() => signIn('')}
+              className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'
+            >
+              <img src='/login/facebook.svg' alt='' width='30' height='25' />
             </button>
           </div>
           <div className='relative'>
@@ -82,7 +84,7 @@ const LoginPage = () => {
                   email,
                   password,
                   redirect: true,
-                  callbackUrl: '/'+lang
+                  callbackUrl: '/' + lang
                 })
               }
               disabled={!email || !password}

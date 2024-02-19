@@ -21,11 +21,11 @@ interface PostData {
   categories: it[];
 }
 
-const BlogCard = ({ vari,language }: { vari: PostData,language:string }) => {
+const BlogCard = ({ vari, language }: { vari: PostData, language: string }) => {
   return (
-    <Link href={`/${language}/blogs/${vari._id}`}>
-      <div className="flex flex-col space-y-2 bg-primary-bg w-72 hover:scale-105 transition-transform duration-200 ease-out rounded overflow-hidden">
-        <div className="w-full h-48 relative" style={{ boxShadow: '0 0 0 2px #000' }}>
+    <Link className="w-1/3" href={`/${language}/blogs/${vari._id}`}>
+      <div className="flex flex-col space-y-2 py-6 h-full p-4 sm:p-8 bg-white/40 dark:bg-slate-800 rounded-2xl hover:ring hover:ring-rose-600 hover:bg-rose-300 dark:hover:bg-rose-900 transition duration-300 delay-40 hover:delay-40 overflow-hidden">
+        <div className="h-48 relative" style={{ boxShadow: '0 0 0 2px #000' }}>
           <Image src={vari.image} alt="image" layout="fill" objectFit="cover" />
         </div>
         <div className="flex flex-row">

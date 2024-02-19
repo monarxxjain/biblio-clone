@@ -4,7 +4,7 @@ import { signIn, useSession } from 'next-auth/react'
 import { useLocale } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -12,11 +12,17 @@ const LoginPage = () => {
   const router = useRouter()
   const session = useSession()
   const lang = useLocale()
-  if (session.status === 'authenticated') {
-    router.push('/')
-  }
+
+  // if (session.status === 'authenticated') {
+  //   router.push('/')
+  // }
+  useEffect(() => {
+    if (session.status === 'authenticated') {
+      router.push('/' + lang) 
+    }
+  }, [session.status, router])
   return (
-    <main className='w-full h-screen flex flex-col items-center mt-12 sm:px-4'>
+    <main className='w-full h-screen flex flex-col items-center mt-12 px-6'>
       <div className='w-full space-y-6 text-gray-600 sm:max-w-md bg-white rounded'>
         <div className='text-center'>
           <div className='mt-5 space-y-2'>
@@ -35,7 +41,7 @@ const LoginPage = () => {
           </div>
         </div>
         <div className='bg-white  p-4 py-6 space-y-8 sm:p-6 sm:rounded-lg'>
-          <div className='grid grid-cols-2 gap-x-3'>
+          <div className='grid grid-cols-3 gap-x-3'>
             <button
               onClick={() => signIn('google')}
               className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'
@@ -43,10 +49,16 @@ const LoginPage = () => {
               <img src='/login/google.svg' alt='' width='28' height='25' />
             </button>
             <button
-              onClick={() => signIn('')}
+              onClick={() => signIn('facebook')}
               className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'
             >
               <img src='/login/facebook.svg' alt='' width='30' height='25' />
+            </button>
+            <button
+              onClick={() => signIn('twitter')}
+              className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'
+            >
+              <img src='/login/twitter.svg' alt='' width='30' height='25' />
             </button>
           </div>
           <div className='relative'>

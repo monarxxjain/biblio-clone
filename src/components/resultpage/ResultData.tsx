@@ -85,7 +85,8 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) 
       try {
         onAuthStateChanged(auth, async (user) => {
           if (user) {
-            const uid = user.uid;
+            // const uid = user.uid;
+            const uid = session.data?.user?.email || "";
             const userDocRef = doc(firestore, 'library', uid);
             const userDoc = await getDoc(userDocRef);
             if (userDoc.exists()) {
@@ -111,7 +112,7 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) 
   const handleButtonClick = async () => {
     const user = auth.currentUser;
     if (user) {
-        // const uid = user.uid;
+      // const uid = user.uid;
       const uid = session.data?.user?.email || "";
       const userDocRef = doc(firestore, 'library', uid);
 

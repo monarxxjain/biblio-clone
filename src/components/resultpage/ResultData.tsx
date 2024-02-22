@@ -19,8 +19,9 @@ import { getFirestore, getDoc } from 'firebase/firestore';
 import { doc, updateDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { auth } from "@/lib/firebase";
 import { useSession } from "next-auth/react";
+import {firestore} from "@/lib/firebase";
 
-const firestore = getFirestore();
+
 
 interface ScrapedData {
   title: string;
@@ -83,8 +84,8 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
+        // onAuthStateChanged(auth, async (user) => {
+          // if (user) {
             // const uid = user.uid;
             const uid = session.data?.user?.email || "";
             const userDocRef = doc(firestore, 'library', uid);
@@ -99,8 +100,8 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) 
             } else {
               setIsSaved(false);
             }
-          }
-        });
+          // }
+        // });
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -110,10 +111,12 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) 
   }, []);
   const session = useSession();
   const handleButtonClick = async () => {
-    const user = auth.currentUser;
+    console.log("tes ")
+    const user = session.data?.user;
     if (user) {
       // const uid = user.uid;
       const uid = session.data?.user?.email || "";
+      console.log("User mail ",uid);
       const userDocRef = doc(firestore, 'library', uid);
 
       try {

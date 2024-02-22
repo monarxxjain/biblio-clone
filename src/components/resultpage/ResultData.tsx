@@ -18,6 +18,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, getDoc } from 'firebase/firestore';
 import { doc, updateDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { auth } from "@/lib/firebase";
+import { useSession } from "next-auth/react";
 
 const firestore = getFirestore();
 
@@ -106,11 +107,12 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) 
 
     fetchData();
   }, []);
-
+  const session = useSession();
   const handleButtonClick = async () => {
     const user = auth.currentUser;
     if (user) {
-      const uid = user.uid;
+        // const uid = user.uid;
+      const uid = session.data?.user?.email || "";
       const userDocRef = doc(firestore, 'library', uid);
 
       try {

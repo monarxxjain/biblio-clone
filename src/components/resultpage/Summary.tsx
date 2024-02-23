@@ -192,9 +192,9 @@ const fetchAudio = async () => {
                   
                   // }
                 /////
-                const data = await res.json();
-                console.log("Chat Gpt Data ", data);
                 if (res.ok) {
+                  const data = await res.json();
+                  console.log("Chat Gpt Data ", data);
                   const summaryData = {
                     _key: uuidv4(),
                     language: curLang,

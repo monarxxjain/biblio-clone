@@ -188,9 +188,6 @@ const fetchAudio = async () => {
               
                  
                 // } catch (e) {
-                //   setShowToast("Summary creation failed.");
-                //   setTimeout(() => setShowToast(""), 3000);
-                //   console.log("Some thing went wrong while generating summary");
                 // } finally {
                   
                   // }
@@ -216,6 +213,15 @@ const fetchAudio = async () => {
                     });
                     // console.log(updatedBook);
                     const response = await client.createOrReplace(updatedBook);
+                    setShowToast("Summary created successfuly.");
+                    setTimeout(() => setShowToast(""), 3000);
+                    setBookData({
+                      ...bookData,
+                      summaries: [
+                        ...bookData.summaries,
+                        { language: curLang, summary: data.respData.summary },
+                      ],
+                    });
                     //   console.log("Operation completed:", response);
                   } else {
                     // Document does not exist, create a new document with the given ID and add the summary
@@ -248,7 +254,9 @@ const fetchAudio = async () => {
                     ],
                   });
                 } else if (!res.ok) {
-                  
+                    setShowToast("Summary creation failed.");
+                    setTimeout(() => setShowToast(""), 3000);
+                    console.log("Some thing went wrong while generating summary");
                 } else {
                   // setError(true)
                 }

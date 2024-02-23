@@ -45,29 +45,29 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     // add to santiy
 
     // Check if the document with the given ID exists
-    const book = await client.fetch('*[_type == "book" && id == $bookId][0]', {
-      bookId: body.bookId,
-    });
-    if (book) {
-      const updatedBook = Object.assign({}, book, {
-        summaries: [...book?.summaries, summaryData],
-      });
-      // console.log(updatedBook);
-      const response = await client.createOrReplace(updatedBook);
-      //   console.log("Operation completed:", response);
-    } else {
-      // Document does not exist, create a new document with the given ID and add the summary
-      // console.log("New book")
-      const newBook = {
-        id: body.bookId,
-        _type: "book",
-        summaries: [summaryData],
-        audios: [],
-      };
-      const response = await client.create(newBook);
-      //   console.log("Operation completed new book:", response);
-    }
-    // if successful
+    // const book = await client.fetch('*[_type == "book" && id == $bookId][0]', {
+    //   bookId: body.bookId,
+    // });
+    // if (book) {
+    //   const updatedBook = Object.assign({}, book, {
+    //     summaries: [...book?.summaries, summaryData],
+    //   });
+    //   // console.log(updatedBook);
+    //   const response = await client.createOrReplace(updatedBook);
+    //   //   console.log("Operation completed:", response);
+    // } else {
+    //   // Document does not exist, create a new document with the given ID and add the summary
+    //   // console.log("New book")
+    //   const newBook = {
+    //     id: body.bookId,
+    //     _type: "book",
+    //     summaries: [summaryData],
+    //     audios: [],
+    //   };
+    //   const response = await client.create(newBook);
+    //   //   console.log("Operation completed new book:", response);
+    // }
+    // // if successful
     const respData = {
       status: "Generated Summary",
       summary: summaryGen,

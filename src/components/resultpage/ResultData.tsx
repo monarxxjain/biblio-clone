@@ -82,10 +82,11 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) 
   // BOOKMARK WITH FIREBASE
 
   useEffect(() => {
+ 
     const fetchData = async () => {
       try {
         // onAuthStateChanged(auth, async (user) => {
-          // if (user) {
+          if (session.data?.user) {
             // const uid = user.uid;
             const uid = session.data?.user?.email || "";
             const userDocRef = doc(firestore, 'library', uid);
@@ -100,7 +101,7 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) 
             } else {
               setIsSaved(false);
             }
-          // }
+          }
         // });
       } catch (error) {
         console.error('Error fetching data:', error);

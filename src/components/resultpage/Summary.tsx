@@ -13,6 +13,9 @@ import { Audio } from "openai/resources/index.mjs";
 import AudioPlayerModal from "./AudioPlayerModal";
 import { LoadingBlock } from "sanity";
 import LoadingSpinner from "../global/LoadingSpinner";
+import OpenAI from "openai";
+import { chatGpt } from "@/openai/openai";
+import { v4 as uuidv4 } from 'uuid';
 
 interface ResultDataProps {
   bookId: string;
@@ -120,14 +123,15 @@ const fetchAudio = async () => {
             Summary:
           </h2>
           {/* <LoadingBlock/> */}
-          <div className="flex space-x-5">
+          <div className="flex space-x-5 w-full flex-wrap">
             
             {bookLoading && (<LoadingSpinner/>)}
             {
               // bookData.summaries.filter((data)=>data.language==curLang)              
               bookData?.summaries?.map((data, i) => (
-                <>
+                <div className="flex ">
                   <button
+                    
                     type="button"
                     onClick={() => {
                       setCurSummary(data.summary);
@@ -136,10 +140,11 @@ const fetchAudio = async () => {
                     >
                     Version {i + 1}
                   </button>
-                </>
+                </div>
               ))
             }
             <button
+              className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
               type="button"
               disabled={(createSummaryBtn==="Creating...")?true:false}
               onClick={async () => {
@@ -156,10 +161,83 @@ const fetchAudio = async () => {
                     author: author,
                   }),
                 });
-                
+                /// 
+                // try {
+                // //   // generate summary from chat gpt
+                //   const params: OpenAI.Chat.ChatCompletionCreateParams = {
+                //     messages: [
+                //       {
+                //         role: "user",
+                //         content: `give me summary of book "${title}" by ${author} in ${curLang} language, it should be two part first overall summary and then chapter wise summary.`,
+                //       },
+                //     ],
+                //     model: "gpt-3.5-turbo",
+                //   };
+                //   const chatCompletion: OpenAI.Chat.ChatCompletion = await chatGpt.chat.completions.create(params);
+              
+                //     console.log("ChatCompletion : ",chatCompletion);
+              
+                //   const summaryGen: string =
+                //     chatCompletion?.choices[0]?.message.content || "";
+                //   if (summaryGen.match("I'm sorry,")) {
+                //     throw ("Chat Gpt unable to generate summary");
+                //   }
+                  //await handleSummarizeRequest(body?.title,body?.author);
+                  // console.log("Summary : => ",summaryGen);
+                  // if generated successfully
+              
+                 
+                // } catch (e) {
+                //   setShowToast("Summary creation failed.");
+                //   setTimeout(() => setShowToast(""), 3000);
+                //   console.log("Some thing went wrong while generating summary");
+                // } finally {
+                  
+                  // }
+                /////
                 const data = await res.json();
-                // console.log("Chat Gpt Data ", data);
+                console.log("Chat Gpt Data ", data);
                 if (res.ok) {
+                  const summaryData = {
+                    _key: uuidv4(),
+                    language: curLang,
+                    summary: data.respData.summary,
+                  };
+              
+                  // add to santiy
+              
+                  // Check if the document with the given ID exists
+                  const book = await client.fetch('*[_type == "book" && id == $bookId][0]', {
+                    bookId: bookId,
+                  });
+                  if (book) {
+                    const updatedBook = Object.assign({}, book, {
+                      summaries: [...book?.summaries, summaryData],
+                    });
+                    // console.log(updatedBook);
+                    const response = await client.createOrReplace(updatedBook);
+                    //   console.log("Operation completed:", response);
+                  } else {
+                    // Document does not exist, create a new document with the given ID and add the summary
+                    // console.log("New book")
+                    const newBook = {
+                      id: bookId,
+                      _type: "book",
+                      summaries: [summaryData],
+                      audios: [],
+                    };
+                    const response = await client.create(newBook);
+                    setShowToast("Summary created successfuly.");
+                    setTimeout(() => setShowToast(""), 3000);
+                    setBookData({
+                      ...bookData,
+                      summaries: [
+                        ...bookData.summaries,
+                        { language: curLang, summary: data.respData.summary },
+                      ],
+                    });
+                    //   console.log("Operation completed new book:", response);
+                  }
                   setShowToast("Summary created successfuly.");
                   setTimeout(() => setShowToast(""), 3000);
                   setBookData({
@@ -170,15 +248,12 @@ const fetchAudio = async () => {
                     ],
                   });
                 } else if (!res.ok) {
-                  setShowToast("Summary creation failed.");
-                  setTimeout(() => setShowToast(""), 3000);
-                  console.log("Some thing went wrong while generating summary");
+                  
                 } else {
                   // setError(true)
                 }
                 setCreateSummaryBtn("Create a new Summary")
               }}
-              className="flex items-center py-5 px-16 mt-6 mb-8 font-semibold text-md text-gray-900 dark:text-gray-300 bg-rose-50 dark:bg-gray-800 rounded-md shadow-sm shadow-rose-800 hover:shadow-xl hover:bg-rose-300 dark:hover:bg-slate-800 transition duration-300 delay-40 hover:delay-40 ring ring-gray-400 dark:ring-gray-500 hover:ring-rose-600 dark:hover:ring-rose-600"
               >
               {createSummaryBtn}
             </button>

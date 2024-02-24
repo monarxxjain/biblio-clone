@@ -5,7 +5,8 @@ import FacebookProvider from "next-auth/providers/facebook";
 import TwitterProvider from "next-auth/providers/twitter";
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
-
+import { FirestoreAdapter } from "@auth/firebase-adapter"
+import admin from '@/lib/admin';
 export const authOptions = {
   // Configure one or more authentication providers
   pages: {
@@ -46,6 +47,7 @@ export const authOptions = {
     })
 
   ],
+
 
 }
 const handler = NextAuth(authOptions);

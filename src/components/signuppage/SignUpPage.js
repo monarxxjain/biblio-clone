@@ -10,7 +10,7 @@ import { signIn, useSession } from 'next-auth/react'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import { useLocale } from 'next-intl'
-import { auth } from '@/lib/firebase'
+import { app, auth } from '@/lib/firebase'
 import Toast from '../global/Toast'
 
 const SignUpPage = () => {
@@ -19,8 +19,28 @@ const SignUpPage = () => {
   const [showToast, setShowToast] = useState('')
   const router = useRouter()
   const lang = useLocale()
-  const signup = async () => {
+  const checkIfVerified = async () => {
+    const res = await fetch(`/api/verify-email`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email
+      })
+    })
+    if (res.ok) {
+      const data = await res.json()
+      console.log("Data ",data);
+      return data.isVerified;
+    } else {
+      // console.log("Error");
+    }
+  }
+  const signup = async () => {  
+
     try {
+      await checkIfVerified();
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -31,21 +51,18 @@ const SignUpPage = () => {
       await sendEmailVerification(user)
 
       setShowToast('Verify your email address')
-      setTimeout(() => setShowToast(''), 3000)
+      setTimeout(() => {setShowToast('');router.push('/login')}, 3000)
 
-      const checkEmailVerification = async () => {
-        await user.reload()
+      // const checkEmailVerification = async () => {
+      //   await user.reload()
 
-        if (user.emailVerified) {
-          setShowToast('Verification Successful')
-          setTimeout(() => setShowToast(''), router.push('/login'), 3000)
-        } else {
-          setTimeout(checkEmailVerification, 5000)
-        }
-      }
+      //   if (user.emailVerified) {
+      //     setShowToast('Verification Successful')
+      // setTimeout(() => setShowToast(''), router.push('/login'), 3000)
+        
 
-      checkEmailVerification()
     } catch (error) {
+      console.log("error ",error);
       const errorCode = error.code
       const errorMessage = error.message
       setShowToast(errorMessage)

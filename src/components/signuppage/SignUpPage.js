@@ -1,5 +1,8 @@
 'use client'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification
+} from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -8,29 +11,46 @@ import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import { useLocale } from 'next-intl'
 import { auth } from '@/lib/firebase'
+import Toast from '../global/Toast'
 
 const SignUpPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showToast, setShowToast] = useState('')
   const router = useRouter()
   const lang = useLocale()
-  const signup = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        // Signed in
-        var user = userCredential.user
-        // signIn('credentials', {
-        //   email,
-        //   password,
-        //   redirect: true,
-        //   callbackUrl: '/' + lang
-        // })
-        router.push('/login')
-      })
-      .catch(error => {
-        var errorCode = error.code
-        var errorMessage = error.message
-      })
+  const signup = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      )
+      const user = userCredential.user
+      // console.log(user)
+      await sendEmailVerification(user)
+
+      setShowToast('Verify your email address')
+      setTimeout(() => setShowToast(''), 3000)
+
+      const checkEmailVerification = async () => {
+        await user.reload()
+
+        if (user.emailVerified) {
+          setShowToast('Verification Successful')
+          setTimeout(() => setShowToast(''), router.push('/login'), 3000)
+        } else {
+          setTimeout(checkEmailVerification, 5000)
+        }
+      }
+
+      checkEmailVerification()
+    } catch (error) {
+      const errorCode = error.code
+      const errorMessage = error.message
+      setShowToast(errorMessage)
+      setTimeout(() => setShowToast(''), 3000)
+    }
   }
 
   //   firebase.auth().onAuthStateChanged(function (user) {
@@ -78,6 +98,7 @@ const SignUpPage = () => {
                 className='w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg'
               />
             </div>
+            {showToast && <Toast message={showToast} />}
             <button
               disabled={!email || !password}
               onClick={() => signup()}

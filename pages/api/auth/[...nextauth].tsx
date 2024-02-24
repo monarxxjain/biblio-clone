@@ -19,6 +19,12 @@ export const authOptions = {
         return await signInWithEmailAndPassword(auth, (credentials as any).email || '', (credentials as any).password || '')
           .then(userCredential => {
             if (userCredential.user) {
+              if(userCredential.user.emailVerified==false)
+             { console.log("not verified")
+              return null;
+              
+              }
+
               return userCredential.user;
             }
             return null;

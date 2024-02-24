@@ -112,12 +112,12 @@ const ResultData: React.FC<ResultDataProps> = ({ scrapedData, slug, language }) 
   }, []);
   const session = useSession();
   const handleButtonClick = async () => {
-    console.log("tes ")
+    // console.log("tes ")
     const user = session.data?.user;
     if (user) {
       // const uid = user.uid;
       const uid = session.data?.user?.email || "";
-      console.log("User mail ",uid);
+      // console.log("User mail ",uid);
       const userDocRef = doc(firestore, 'library', uid);
 
       try {

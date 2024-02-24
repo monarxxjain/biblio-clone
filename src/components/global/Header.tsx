@@ -16,6 +16,7 @@ const Header: React.FC = () => {
   const lang = useLocale();
   const session = useSession();
   const [mobileNav, setMobileNav] = useState(false)
+  console.log("sdf ",session.data)
 
   useEffect(() => {
     if (mobileNav) {
@@ -152,13 +153,13 @@ const Header: React.FC = () => {
                     aria-expanded="true"
                     aria-haspopup="true"
                   >
-                    <img
+                    {session?.data?.user?.image && <img
                       className="h-8 w-8 rounded-full"
                       src={session?.data.user?.image || '/default-profile-icon.jpg'}
                       alt="User Profile"
-                    />
+                    />}
                     <span>
-                      {`${session?.data.user.name}`}
+                      {`${session?.data.user.email}`}
                     </span>
                   </div>
                   <button
@@ -195,12 +196,12 @@ const Header: React.FC = () => {
 
           {session.data?.user && (<>
             <div className="flex space-y-2 items-center justify-between align-middle">
-              <img
+              {session?.data?.user?.image && <img
                 className="h-8 w-8 rounded-full"
                 src={session?.data.user?.image || '/default-profile-icon.jpg'}
                 alt="User Profile"
-              />
-              {`${session?.data.user.name}`}
+              />}
+              {`${session?.data.user.email}`}
             </div>
             <div className="border-b dark:border-black border-white w-full my-2"></div>
           </>

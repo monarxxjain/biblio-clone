@@ -18,7 +18,7 @@ const LoginPage = () => {
   // }
   useEffect(() => {
     if (session.status === 'authenticated') {
-      router.push('/' + lang) 
+      router.push('/' + lang)
     }
   }, [session.status, router])
   return (
@@ -41,32 +41,6 @@ const LoginPage = () => {
           </div>
         </div>
         <div className='bg-white  p-4 py-6 space-y-8 sm:p-6 sm:rounded-lg'>
-          <div className='grid grid-cols-3 gap-x-3'>
-            <button
-              onClick={() => signIn('google')}
-              className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'
-            >
-              <img src='/login/google.svg' alt='' width='28' height='25' />
-            </button>
-            <button
-              onClick={() => signIn('facebook')}
-              className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'
-            >
-              <img src='/login/facebook.svg' alt='' width='30' height='25' />
-            </button>
-            <button
-              onClick={() => signIn('twitter')}
-              className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'
-            >
-              <img src='/login/twitter.svg' alt='' width='30' height='25' />
-            </button>
-          </div>
-          <div className='relative'>
-            <span className='block w-full h-px bg-gray-300'></span>
-            <p className='inline-block w-fit text-sm bg-white px-2 absolute -top-2 inset-x-0 mx-auto'>
-              Or continue with
-            </p>
-          </div>
           <form onSubmit={e => e.preventDefault()} className='space-y-5'>
             <div>
               <label className='font-medium'>Email</label>
@@ -92,14 +66,13 @@ const LoginPage = () => {
             <button
               className='w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150'
               onClick={() =>
-              
                 signIn('credentials', {
                   email,
                   password,
                   redirect: true,
                   callbackUrl: '/' + lang
-                }).then((resp)=>{
-                  console.log("Resp ",resp);
+                }).then(resp => {
+                  console.log('Resp ', resp)
                 })
               }
               disabled={!email || !password}
@@ -107,6 +80,33 @@ const LoginPage = () => {
               Sign in
             </button>
           </form>
+          <div className='relative'>
+            <span className='block w-full h-px bg-gray-300'></span>
+            <p className='inline-block w-fit text-sm bg-white px-2 absolute -top-2 inset-x-0 mx-auto'>
+              Or continue with
+            </p>
+          </div>
+          <div className='grid grid-cols-1 gap-x-3'>
+            <button
+              onClick={() => signIn('google')}
+              className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'
+            >
+              <img src='/login/google.svg' alt='' width='28' height='25' />
+            </button>
+            {/* <button
+              onClick={() => signIn('facebook')}
+              className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'
+            >
+              <img src='/login/facebook.svg' alt='' width='30' height='25' />
+            </button>
+            <button
+              onClick={() => signIn('twitter')}
+              className='flex items-center justify-center py-2.5 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100'
+            >
+              <img src='/login/twitter.svg' alt='' width='30' height='25' />
+            </button> */}
+          </div>
+
           <div className='text-center bg-white '>
             <div
               onClick={() => router.push('/forgotpassword')}

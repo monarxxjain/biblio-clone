@@ -28,7 +28,7 @@ export const POST = async (req: NextRequest, res: NextResponse)=> {
         .map((i:number, el: Element) => {
           const $el = $(el);
           const author = $el.text();
-          const url = $el.attr("href");
+          const url = $el.attr("href").replace(".",'-');
           const id = i + 1;
           return {
             id: id,
@@ -49,7 +49,7 @@ export const POST = async (req: NextRequest, res: NextResponse)=> {
           const $el = $(el);
           const cover = $el.find("td > a > img").attr("src");
           const title = $el.find("td:nth-child(2) > a > span").text();
-          const url = $el.find("td:nth-child(2) > a").attr("href");
+          const url = $el.find("td:nth-child(2) > a").attr("href").replace(".",'-');
           const rating = $el
             .find("td:nth-child(2) > div > span > span")
             .text()
@@ -79,14 +79,14 @@ export const POST = async (req: NextRequest, res: NextResponse)=> {
             .text();
           const seriesURL = $el
             .find("div.seriesDesc > span[itemprop = 'name'] > a")
-            .attr("href");
+            .attr("href").replace(".",'-');
           const author = $el
             .find("div.seriesDesc > span[itemprop = 'author'] > div > a > span")
             .html();
           const authorURL = $el
             .find("div.seriesDesc > span[itemprop = 'author'] > div > a")
             .attr("href")
-            .replaceAll("https://www.goodreads.com", "");
+            .replaceAll("https://www.goodreads.com", "").replace(".",'-');
           const rating = $el
             .find("div.seriesDesc > span.greyText.smallText.uitext > span")
             .text();

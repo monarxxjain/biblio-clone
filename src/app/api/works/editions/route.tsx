@@ -43,7 +43,7 @@ const body = await req.json();
       const htmlString = await response.text();
       const $ = cheerio.load(htmlString);
       const book = $("div.mainContentFloat > h1 > a").text();
-      const bookURL = $("div.mainContentFloat > h1 > a").attr("href");
+      const bookURL = $("div.mainContentFloat > h1 > a").attr("href").replace(".",'-');
       const author = $("div.leftContainer.workEditions > h2 > a").text();
       const authorURL = $("div.leftContainer.workEditions > h2 > a").attr(
         "href"

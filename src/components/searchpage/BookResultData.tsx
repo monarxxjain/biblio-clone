@@ -17,6 +17,7 @@ interface SearchResultsProps {
 }
 
 const SearchResults: React.FC<SearchResultsProps> = (props) =>{
+  console.log("Result : ",props);
   return (
     <div
       id='booksSearchResults'

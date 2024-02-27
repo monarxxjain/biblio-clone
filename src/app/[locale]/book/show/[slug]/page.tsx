@@ -68,7 +68,8 @@ const Slug = ({params}: {params: Params}) => {
           'content-type': 'application/json'
         },
         body: JSON.stringify({
-          queryURL: `https://www.goodreads.com/book/show/${slug}`
+          queryURL: `https://www.goodreads.com/book/show/${slug}`,
+          bookId: slug
         })
       })
       if (res.ok) {

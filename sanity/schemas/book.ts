@@ -60,6 +60,14 @@ export default {
                 }
             ],
             description: 'List of audio versions of the book'
-        }
-    ]
+        },
+        {
+            name: 'data',
+            title: 'Json Data',
+            type: 'string',
+            description: 'Json data of book'
+
+        },
+    ],
+   
 }

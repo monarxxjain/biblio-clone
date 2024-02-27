@@ -16,6 +16,8 @@ import LoadingSpinner from "../global/LoadingSpinner";
 import OpenAI from "openai";
 import { chatGpt } from "@/openai/openai";
 import { v4 as uuidv4 } from 'uuid';
+import { getSession, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface ResultDataProps {
   bookId: string;
@@ -44,7 +46,8 @@ const Summary: React.FC<ResultDataProps> = ({ bookId, title, author, curLang }) 
   const [showToast,setShowToast] = useState<string>("")
   const [bookLoading,setBookLoading] = useState<boolean>(false);
   const [audioLoading,setAudioLoading] = useState<boolean>(false);
-  
+  const router = useRouter();
+
   const fetchBook = async () => {
     // const query = groq`*[_type == 'book' && id == $bookId][0]`;
     setBookLoading(true);
@@ -148,7 +151,12 @@ const fetchAudio = async () => {
               type="button"
               disabled={(createSummaryBtn==="Creating...")?true:false}
               onClick={async () => {
-                setCreateSummaryBtn("Creating...")
+                setCreateSummaryBtn("Creating...");
+                const session = await getSession();
+                if(!(session?.user?.email)){
+                  router.push(`/${curLang}/login`);
+                  return;
+                }
                 const res = await fetch(`/api/summary`, {
                   method: "POST",
                   headers: {

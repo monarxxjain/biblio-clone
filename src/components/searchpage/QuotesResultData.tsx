@@ -19,6 +19,7 @@ interface QuotesResultDataProps {
 
 const QuotesResultData: React.FC<QuotesResultDataProps> = ({ scrapedData, query }) => {
   const lang = useLocale(); 
+  console.log("quteos resutl ",scrapedData);
   return (
     <div
       id="quotesSearchResults"

@@ -21,6 +21,10 @@ export const pathnames = {
         en: '/quotes',
         vi: '/quotes'
     },
+    '/search': {
+        en: '/search',
+        vi: '/search'
+    },
 } satisfies Pathnames<typeof locales>;
 
 export const localePrefix = undefined;

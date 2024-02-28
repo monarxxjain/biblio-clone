@@ -21,7 +21,7 @@ export const POST = async (req:NextRequest) => {
           const $el = $(el);
           const cover = $el.find("tr > td > a > img").attr("src");
           const title = $el.find("tr > td:nth-child(2) > a > span").text();
-          const bookURL = $el.find("tr > td:nth-child(2) > a").attr("href")?.replace(".",'-');
+          const bookURL = $el.find("tr > td:nth-child(2) > a").attr("href");
           const author = $el
             .find(
               "tr > td:nth-child(2) > span[itemprop = 'author'] > div > a > span[itemprop = 'name']"
@@ -31,7 +31,7 @@ export const POST = async (req:NextRequest) => {
             .find("tr > td:nth-child(2) > span[itemprop = 'author'] > div > a")
             .attr("href")
             .replace("https://www.goodreads.com", "")
-            .split("?")[0]?.replace(".",'-');
+            .split("?")[0];
           const rating = $el
             .find(
               "tr > td:nth-child(2) > div > span.greyText.smallText.uitext > span.minirating"

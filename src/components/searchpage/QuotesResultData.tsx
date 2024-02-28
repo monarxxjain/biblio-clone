@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import DOMPurify from "dompurify";
 import Meta from "@/components/global/Meta";
+import { useLocale } from "next-intl";
 
 interface QuoteData {
   img?: string;
@@ -17,6 +18,7 @@ interface QuotesResultDataProps {
 }
 
 const QuotesResultData: React.FC<QuotesResultDataProps> = ({ scrapedData, query }) => {
+  const lang = useLocale(); 
   return (
     <div
       id="quotesSearchResults"
@@ -55,7 +57,7 @@ const QuotesResultData: React.FC<QuotesResultDataProps> = ({ scrapedData, query 
                       __html: DOMPurify.sanitize(
                         data.text
                           .replaceAll("https://www.goodreads.com", "")
-                          .replaceAll("/author/quotes", "/author/show")
+                          .replaceAll("/author/quotes", "/"+lang+"/author/show")
                           .replaceAll(
                             "<a",
                             '<a class="underline hover:decoration-red-600"'

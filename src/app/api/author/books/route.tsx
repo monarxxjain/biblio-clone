@@ -33,13 +33,13 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
           const $el = $(el);
           const cover = $el.find("td > a > img.bookCover").attr("src");
           const title = $el.find("td > a > span").text();
-          const bookURL = String($el.find("td > a").attr("href"))?.replace(".",'-');
+          const bookURL = String($el.find("td > a").attr("href"));
           const author = $el
             .find("td > span[itemprop = 'author'] > div > a > span")
             .text();
           const authorURL = String($el
             .find("td > span[itemprop = 'author'] > div > a")
-            .attr("href"))?.replace(".",'-');
+            .attr("href"));
           const rating = $el
             .find("td > div > span.greyText.smallText.uitext > span")
             .text();

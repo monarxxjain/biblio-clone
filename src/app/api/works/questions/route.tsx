@@ -47,7 +47,7 @@ const body = await req.json();
       ).text();
       const bookURL = $(
         "div.bookDetails.stacked > h1.communityQABookIndexTitle > a"
-      ).attr("href")?.replace(".",'-');
+      ).attr("href");
       const author = $("div.bookDetails.stacked > div.authorName > a").text();
       const questions = $(
         'div.bigBoxBody > div.bigBoxContent.containerWithHeaderContent > div[id="communityQuestionsWithAnswers"] > div.communityQuestionAndAnswer'
@@ -74,7 +74,7 @@ const body = await req.json();
             .find(
               "div.communityAnswerBody > div.answererUserIcon > a.leftAlignedImage.userPhoto"
             )
-            .attr("href")?.replace(".",'-');
+            .attr("href");
           const question = $el
             .find("div.communityQuestion > div.questionText > a")
             .text();

@@ -40,7 +40,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
             .text();
           const authorURL = $el
             .find("td > span[itemprop = 'author'] > div > a")
-            .attr("href")?.replace(".",'-');
+            .attr("href");
           const rating = $el
             .find("td > div > span.greyText.smallText.uitext > span")
             .text();

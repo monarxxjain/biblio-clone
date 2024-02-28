@@ -15,7 +15,7 @@ const body = await req.json();
       });
       const htmlString = await response.text();
       const $ = cheerio.load(htmlString);
-      const bookURL = $("div.leftContainer > a.leftAlignedImage").attr("href")?.replace(".",'-');
+      const bookURL = $("div.leftContainer > a.leftAlignedImage").attr("href");
       const image = $("div.leftContainer > a.leftAlignedImage > img").attr(
         "src"
       );

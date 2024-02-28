@@ -42,7 +42,7 @@ export const POST = async(req: NextRequest, res: NextResponse)  => {
             .text();
           const bookURL = $el
             .find("div.quoteDetails > div.quoteText > span > a.authorOrTitle")
-            .attr("href").replace(".",'-');
+            .attr("href")?.replace(".",'-');
           const likes = $el
             .find(
               "div.quoteDetails > div.quoteFooter > div.right > a.smallText"

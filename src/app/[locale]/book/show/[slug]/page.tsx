@@ -52,12 +52,12 @@ const Slug = ({params}: {params: Params}) => {
     getSession().then((res)=>{
       if(res?.user?.email)
       {
-        localStorage.setItem('visitCount','0');
+        sessionStorage.setItem('visitCount','0');
       }else{
-        const cnt = parseInt(localStorage.getItem('visitCount')||'0');
+        const cnt = parseInt(sessionStorage.getItem('visitCount')||'0');
         console.log("current cnt ",cnt);
-        localStorage.setItem('visitCount',(cnt+1).toString())
-        if(((cnt+1)/2)>=(parseInt(process.env.NEXT_PUBLIC_VISIT_ALLOWED || '5')))
+        sessionStorage.setItem('visitCount',(cnt+1).toString())
+        if(((cnt+1))>=(parseInt(process.env.NEXT_PUBLIC_VISIT_ALLOWED || '10')))
         router.push(`/${params.locale}/login`)
       }
     })

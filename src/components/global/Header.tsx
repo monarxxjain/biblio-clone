@@ -9,6 +9,7 @@ import { useLocale } from "next-intl";
 import { getSession, useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { redirect } from "next/dist/server/api-utils";
+import { usePathname, useRouter } from "next/navigation";
 
 
 
@@ -16,7 +17,24 @@ const Header: React.FC = () => {
   const lang = useLocale();
   const session = useSession();
   const [mobileNav, setMobileNav] = useState(false)
-  console.log("sdf ",session.data)
+  const router = useRouter();
+  const pathname = usePathname();
+  const [selectedLanguage, setSelectedLanguage] = useState(lang);
+
+  const handleLanguageChange = () => {
+      const newLanguage = lang === 'en' ? 'vi' : 'en';
+      setSelectedLanguage(newLanguage);
+      console.log("handle change")
+      let path;
+      if(newLanguage === 'en')
+      {
+        path = pathname?.replace('/vi','/en')||null;
+        
+      }else{
+        path = pathname?.replace('/en','/vi')||null;
+      }
+      if(path)router.push(path);
+  };
 
   useEffect(() => {
     if (mobileNav) {
@@ -136,13 +154,29 @@ const Header: React.FC = () => {
             <li>
               <ThemeToggle />
             </li>
-
+            <div className="inline-flex items-center px-1 md:ml-3">
+              <span className="mr-2 text-black dark:text-white ">EN</span>
+            <div className="relative inline-block w-8 h-4 rounded-full cursor-pointer">
+              <input id="switch-component" type="checkbox"
+                className="absolute w-8 h-4 transition-colors duration-300 rounded-full appearance-none cursor-pointer peer bg-blue-gray-100 bg-gray-900 peer-checked:border-gray-900 peer-checked:before:bg-gray-900"
+                onChange={handleLanguageChange}
+                checked={lang=='vi'} />
+              <label htmlFor="switch-component"
+                className="before:content[''] absolute top-2/4 -left-1 h-5 w-5 -translate-y-2/4 cursor-pointer rounded-full border border-blue-gray-100 bg-white shadow-md transition-all duration-300 before:absolute before:top-2/4 before:left-2/4 before:block before:h-10 before:w-10 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity hover:before:opacity-10 peer-checked:translate-x-full peer-checked:border-gray-900 peer-checked:before:bg-gray-900">
+                <div className="inline-block p-5 rounded-full top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4"
+                  data-ripple-dark="true"></div>
+              </label>
+            </div>
+                  <span className="ml-2 text-black dark:text-white">VI</span>
+          </div>
             <div onClick={() => setMobileNav(!mobileNav)} className="md:hidden flex flex-col justify-center gap-y-1 ms-5 cursor-pointer">
               <div className="w-8 h-1 rounded bg-black dark:bg-white"></div>
               <div className="w-8 h-1 rounded bg-black dark:bg-white"></div>
               <div className="w-8 h-1 rounded bg-black dark:bg-white"></div>
             </div>
           </ul>
+          
+          
           <div className="hidden md:flex">{
             (session.data?.user && (
               <div className="relative inline-block align-middle">
@@ -193,7 +227,6 @@ const Header: React.FC = () => {
       </header>
       {mobileNav && <div className=" dark:bg-rose-300 bg-[#881133] absolute z-50 md:hidden right-0 h-screen w-64  transition-all duration-300 ease-in-out transform ">
         <nav className="flex flex-col p-4 space-y-4 dark:text-gray-900 text-gray-100/90">
-
           {session.data?.user && (<>
             <div className="flex space-y-2 items-center justify-between align-middle">
               {session?.data?.user?.image && <img
@@ -229,6 +262,7 @@ const Header: React.FC = () => {
             <p className="font-semibold text-md ">Privacy</p>
           </Link>
           <div className="border-b dark:border-black border-white w-full my-2"></div>
+
 
           {session.data?.user && (<>
             <p onClick={() => signOut()} className="dark:hover:text-rose-900 hover:text-white/90 font-bold dark:text-gray-900 text-gray-100/90">

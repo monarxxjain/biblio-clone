@@ -19,6 +19,24 @@ const SignUpPage = () => {
   const [showToast, setShowToast] = useState('')
   const router = useRouter()
   const lang = useLocale()
+
+  //sign up validation
+  const validate = () => {
+    if (email === '' || password === '') {
+      setShowToast("Fields can't be empty")
+      setTimeout(() => setShowToast(''), 3000)
+      return false
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    if (!emailRegex.test(email)) {
+      setShowToast('Invalid email format')
+      setTimeout(() => setShowToast(''), 3000)
+      return false
+    }
+    return true
+  }
+
   const checkIfVerified = async () => {
     const res = await fetch(`/api/verify-email`, {
       method: 'POST',
@@ -31,16 +49,15 @@ const SignUpPage = () => {
     })
     if (res.ok) {
       const data = await res.json()
-      console.log("Data ",data);
-      return data.isVerified;
+      console.log('Data ', data)
+      return data.isVerified
     } else {
       // console.log("Error");
     }
   }
-  const signup = async () => {  
-
+  const signup = async () => {
     try {
-      await checkIfVerified();
+      await checkIfVerified()
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -51,7 +68,10 @@ const SignUpPage = () => {
       await sendEmailVerification(user)
 
       setShowToast('Verify your email address')
-      setTimeout(() => {setShowToast('');router.push('/login')}, 3000)
+      setTimeout(() => {
+        setShowToast('')
+        router.push('/login')
+      }, 3000)
 
       // const checkEmailVerification = async () => {
       //   await user.reload()
@@ -59,10 +79,8 @@ const SignUpPage = () => {
       //   if (user.emailVerified) {
       //     setShowToast('Verification Successful')
       // setTimeout(() => setShowToast(''), router.push('/login'), 3000)
-        
-
     } catch (error) {
-      console.log("error ",error);
+      console.log('error ', error)
       const errorCode = error.code
       const errorMessage = error.message
       setShowToast(errorMessage)
@@ -117,8 +135,11 @@ const SignUpPage = () => {
             </div>
             {showToast && <Toast message={showToast} />}
             <button
-              disabled={!email || !password}
-              onClick={() => signup()}
+              onClick={() => {
+                if (validate()) {
+                  signup()
+                }
+              }}
               className='disabled:opacity-40 w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150'
             >
               Create account

@@ -5,10 +5,13 @@ import { useLocale } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import Toast from '../global/Toast'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showToast, setShowToast] = useState('')
+  
   const router = useRouter()
   const session = useSession()
   const lang = useLocale()
@@ -21,6 +24,23 @@ const LoginPage = () => {
       router.push('/' + lang)
     }
   }, [session.status, router])
+
+  const validate = () => {
+    if (email === '' || password === '') {
+      setShowToast("Fields can't be empty")
+      setTimeout(() => setShowToast(''), 3000)
+      return false
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    if (!emailRegex.test(email)) {
+      setShowToast('Invalid email format')
+      setTimeout(() => setShowToast(''), 3000)
+      return false
+    }
+
+    return true
+  }
   return (
     <main className='w-full h-screen flex flex-col items-center mt-12 px-6'>
       <div className='w-full space-y-6 text-gray-600 sm:max-w-md bg-white rounded'>
@@ -65,19 +85,23 @@ const LoginPage = () => {
             </div>
             <button
               className='w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150'
-              onClick={() =>
-                signIn('credentials', {
-                  email,
-                  password,
-                  redirect: true,
-                  callbackUrl: '/' + lang
-                }).then(resp => {
-                  console.log('Resp ', resp)
-                })
-              }
-              disabled={!email || !password}
+              onClick={async () => {
+                if (validate()) {
+                  await signIn('credentials', {
+                    email,
+                    password,
+                    redirect: false
+                  }).then(resp => {
+                    if (resp.ok) router.push('/')
+                    else {
+                      setShowToast('invalid Email or Password')
+                      setTimeout(() => setShowToast(''), 3000)
+                    }
+                  })
+                }
+              }}
             >
-              Sign in
+              Log in
             </button>
           </form>
           <div className='relative'>
@@ -118,6 +142,7 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
+      {showToast && <Toast message={showToast} />}
     </main>
   )
 }

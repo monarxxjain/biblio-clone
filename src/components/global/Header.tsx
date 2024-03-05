@@ -19,20 +19,15 @@ const Header: React.FC = () => {
   const [mobileNav, setMobileNav] = useState(false)
   const router = useRouter();
   const pathname = usePathname();
-  const [selectedLanguage, setSelectedLanguage] = useState(lang);
 
-  const handleLanguageChange = () => {
-      const newLanguage = lang === 'en' ? 'vi' : 'en';
-      setSelectedLanguage(newLanguage);
+  const handleLanguageChange = (newLang:any) => {
+    // console.log("Language selected", lang.target.value);
+      newLang = newLang.target.value;
+      // setSelectedLanguage(newLang);
       console.log("handle change")
-      let path;
-      if(newLanguage === 'en')
-      {
-        path = pathname?.replace('/vi','/en')||null;
-        
-      }else{
-        path = pathname?.replace('/en','/vi')||null;
-      }
+
+      let path = pathname?.replace(`/${lang}`,`/${newLang}`)||null;
+
       if(path)router.push(path);
   };
 
@@ -155,20 +150,19 @@ const Header: React.FC = () => {
               <ThemeToggle />
             </li>
             <div className="inline-flex items-center px-1 md:ml-3">
-              <span className="mr-2 text-black dark:text-white ">EN</span>
-            <div className="relative inline-block w-8 h-4 rounded-full cursor-pointer">
-              <input id="switch-component" type="checkbox"
-                className="absolute w-8 h-4 transition-colors duration-300 rounded-full appearance-none cursor-pointer peer bg-blue-gray-100 bg-gray-900 peer-checked:border-gray-900 peer-checked:before:bg-gray-900"
-                onChange={handleLanguageChange}
-                checked={lang=='vi'} />
-              <label htmlFor="switch-component"
-                className="before:content[''] absolute top-2/4 -left-1 h-5 w-5 -translate-y-2/4 cursor-pointer rounded-full border border-blue-gray-100 bg-white shadow-md transition-all duration-300 before:absolute before:top-2/4 before:left-2/4 before:block before:h-10 before:w-10 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity hover:before:opacity-10 peer-checked:translate-x-full peer-checked:border-gray-900 peer-checked:before:bg-gray-900">
-                <div className="inline-block p-5 rounded-full top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4"
-                  data-ripple-dark="true"></div>
-              </label>
-            </div>
-                  <span className="ml-2 text-black dark:text-white">VI</span>
-          </div>
+
+  <div className="relative inline-block">
+    <select
+      className="cursor-pointer appearance-none border rounded-md py-2 px-2 text-center bg-blue-gray-100 dark:bg-red-800 text-black dark:text-white"
+      onChange={handleLanguageChange}
+      value={lang}
+    >
+      <option value="en">English</option>
+      <option value="vi" >Vietnamese</option>
+      <option value="ja">Japanese</option>
+    </select>
+  </div>
+</div>
             <div onClick={() => setMobileNav(!mobileNav)} className="md:hidden flex flex-col justify-center gap-y-1 ms-5 cursor-pointer">
               <div className="w-8 h-1 rounded bg-black dark:bg-white"></div>
               <div className="w-8 h-1 rounded bg-black dark:bg-white"></div>

@@ -20,15 +20,15 @@ const Header: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleLanguageChange = (newLang:any) => {
+  const handleLanguageChange = (newLang: any) => {
     // console.log("Language selected", lang.target.value);
-      newLang = newLang.target.value;
-      // setSelectedLanguage(newLang);
-      console.log("handle change")
+    newLang = newLang.target.value;
+    // setSelectedLanguage(newLang);
+    console.log("handle change")
 
-      let path = pathname?.replace(`/${lang}`,`/${newLang}`)||null;
+    let path = pathname?.replace(`/${lang}`, `/${newLang}`) || null;
 
-      if(path)router.push(path);
+    if (path) router.push(path);
   };
 
   useEffect(() => {
@@ -151,26 +151,27 @@ const Header: React.FC = () => {
             </li>
             <div className="inline-flex items-center px-1 md:ml-3">
 
-  <div className="relative inline-block">
-    <select
-      className="cursor-pointer appearance-none border rounded-md py-2 px-2 text-center bg-blue-gray-100 dark:bg-red-800 text-black dark:text-white"
-      onChange={handleLanguageChange}
-      value={lang}
-    >
-      <option value="en">English</option>
-      <option value="vi" >Vietnamese</option>
-      <option value="ja">Japanese</option>
-    </select>
-  </div>
-</div>
+              <div className="relative inline-block">
+                <label htmlFor="language-select" className="sr-only">Select Language</label>
+                <select
+                  className="cursor-pointer border rounded-md py-2 px-2 text-center bg-blue-gray-100 dark:bg-red-800 text-black dark:text-white"
+                  onChange={handleLanguageChange}
+                  value={lang}
+                >
+                  <option value="en">English</option>
+                  <option value="vi" >Vietnamese</option>
+                  <option value="ja">Japanese</option>
+                </select>
+              </div>
+            </div>
             <div onClick={() => setMobileNav(!mobileNav)} className="md:hidden flex flex-col justify-center gap-y-1 ms-5 cursor-pointer">
               <div className="w-8 h-1 rounded bg-black dark:bg-white"></div>
               <div className="w-8 h-1 rounded bg-black dark:bg-white"></div>
               <div className="w-8 h-1 rounded bg-black dark:bg-white"></div>
             </div>
           </ul>
-          
-          
+
+
           <div className="hidden md:flex">{
             (session.data?.user && (
               <div className="relative inline-block align-middle">
